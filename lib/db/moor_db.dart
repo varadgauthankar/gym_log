@@ -1,4 +1,4 @@
-import 'package:flutter/rendering.dart';
+
 import 'package:moor_flutter/moor_flutter.dart';
 part 'moor_db.g.dart';
 
@@ -22,7 +22,7 @@ class AppDatabase extends _$AppDatabase {
   int get schemaVersion => 1;
 
   Future<List<Exercise>> getAllExercises() => select(exercises).get();
-  Stream<List<Exercise>> wathcAllExercises() => select(exercises).watch();
+  Stream<List<Exercise>> watchAllExercises() => select(exercises).watch();
   Future insertExercise(Exercise exercise) => into(exercises).insert(exercise);
   Future updateExercise(Exercise exercise) =>
       update(exercises).replace(exercise);
