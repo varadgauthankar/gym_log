@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider(
-      builder: (_) => AppDatabase(),
+      create: (_) => AppDatabase(),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
