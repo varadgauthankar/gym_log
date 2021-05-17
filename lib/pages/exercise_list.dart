@@ -7,7 +7,7 @@ import 'package:workout_tracker/widgets/card.dart';
 import 'package:intl/intl.dart';
 
 class ExerciseList extends StatelessWidget {
-  String dateToday = DateFormat("EEEE, d").format(DateTime.now());
+  final String dateToday = DateFormat("EEEE, d").format(DateTime.now());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,11 +28,13 @@ class ExerciseList extends StatelessWidget {
     );
   }
 
+
+  //Build the list of exercises
   StreamBuilder<List<Exercise>> buildExerciseList(BuildContext context) {
-    final databse = Provider.of<AppDatabase>(context);
+    final database = Provider.of<AppDatabase>(context);
 
     return StreamBuilder(
-      stream: databse.wathcAllExercises(),
+      stream: database.watchAllExercises(),
       builder: (context, AsyncSnapshot<List<Exercise>> snapshot) {
         final exercises = snapshot.data;
 
@@ -42,7 +44,8 @@ class ExerciseList extends StatelessWidget {
             final exercise = exercises[index];
             return ExerciseCard(
               exercise: exercise,
-              index: index,
+              index: index + 1,
+              //! Show sets here
             );
           },
         );
