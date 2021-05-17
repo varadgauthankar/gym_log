@@ -7,7 +7,6 @@ import 'package:workout_tracker/db/moor_db.dart';
 import 'package:workout_tracker/models/data_model.dart';
 import 'package:workout_tracker/utils/colors.dart';
 import 'package:workout_tracker/utils/textStyles.dart';
-import "package:intl/intl.dart";
 
 class ExerciseDetail extends StatefulWidget {
   ExerciseDetail({this.exercise});
@@ -17,14 +16,16 @@ class ExerciseDetail extends StatefulWidget {
 }
 
 class _ExerciseDetailState extends State<ExerciseDetail> {
-  
+  //All the TextField Controllers
   TextEditingController nameController = TextEditingController();
   TextEditingController weightController = TextEditingController();
   TextEditingController repsController = TextEditingController();
   TextEditingController noteController = TextEditingController();
 
+  //Store the Data of the Sets
   List<Data> setsData = [];
 
+  //Add Set Data to the SetsData list
   void addSet() {
     Data data = Data(
       reps: int.parse(repsController.text),
@@ -33,19 +34,17 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
 
     setState(() {
       setsData.add(data);
+
+      //! Debug Print here
+      print(setsData.length);
     });
 
     Navigator.pop(context);
   }
 
-  
-
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      // appBar
       appBar: AppBar(
         backgroundColor: MyColors.white,
         elevation: 3,
@@ -58,7 +57,6 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
             onPressed: () => Navigator.pop(context)),
       ),
 
-      // body
       body: Container(
         margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
         padding: EdgeInsets.all(12.0),
@@ -126,11 +124,12 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
               ),
             ),
 
-          //Tmporary Delete Button
+            //Tmporary Delete Button
             FlatButton(
               child: Text("Delete"),
               onPressed: () {
-  final database = Provider.of<AppDatabase>(context, listen: false);
+                final database =
+                    Provider.of<AppDatabase>(context, listen: false);
 
                 database.deleteExercise(widget.exercise);
               },
@@ -143,17 +142,20 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
       floatingActionButton: FloatingActionButton(
         heroTag: 'fab',
         onPressed: () {
-          // final setsDataString = jsonEncode(setsData);
-          // print(setsDataString);
+          final setsDataString = jsonEncode(setsData);
+
           final exercise = Exercise(
             name: nameController.text,
             sets: setsData.length,
             date: DateTime.now(),
-            note: nameController.text,
-            data: "setsDataString", //! fix thissssss
+            note: noteController.text,
+            data: setsDataString,
           );
-  final database = Provider.of<AppDatabase>(context, listen: false);
 
+          //Create instance of database
+          final database = Provider.of<AppDatabase>(context, listen: false);
+          // print(exercise);
+          //Insert Exercise Data to Database
           database.insertExercise(exercise);
           Navigator.pop(context);
         },
@@ -161,6 +163,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
     );
   }
 
+//Input Dialog to Accept Sets Detail
   void showInputDialog() {
     showDialog(
       context: context,
