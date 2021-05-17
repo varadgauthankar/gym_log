@@ -28,7 +28,6 @@ class ExerciseList extends StatelessWidget {
     );
   }
 
-
   //Build the list of exercises
   StreamBuilder<List<Exercise>> buildExerciseList(BuildContext context) {
     final database = Provider.of<AppDatabase>(context);
@@ -44,7 +43,7 @@ class ExerciseList extends StatelessWidget {
             final exercise = exercises[index];
             return ExerciseCard(
               exercise: exercise,
-              index: index + 1,
+              index: index,
               //! Show sets here
             );
           },
