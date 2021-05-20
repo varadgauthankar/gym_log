@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_tracker/db/moor_db.dart';
+import 'package:workout_tracker/pages/exercise_details.dart';
 import 'package:workout_tracker/utils/colors.dart';
 import 'package:workout_tracker/utils/textStyles.dart';
 import 'package:workout_tracker/widgets/card.dart';
@@ -13,7 +14,7 @@ class ExerciseList extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           backgroundColor: MyColors.white,
-          elevation: 3,
+          elevation: 2,
           title: Text(
             dateToday,
             style: AppBarTitleStyle.dark,
@@ -41,10 +42,22 @@ class ExerciseList extends StatelessWidget {
           itemCount: exercises.length,
           itemBuilder: (_, index) {
             final exercise = exercises[index];
-            return ExerciseCard(
-              exercise: exercise,
-              index: index,
-              //! Show sets here
+            return GestureDetector(
+              child: ExerciseCard(
+                exercise: exercise,
+                index: index,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ExerciseDetail(
+                      exercise: exercise,
+                      isEdit: true,
+                    ),
+                  ),
+                );
+              },
             );
           },
         );

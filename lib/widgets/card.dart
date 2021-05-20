@@ -8,93 +8,92 @@ import 'package:workout_tracker/utils/colors.dart';
 import 'package:workout_tracker/utils/textStyles.dart';
 
 class ExerciseCard extends StatelessWidget {
-  Exercise exercise;
-  int index;
+  final Exercise exercise;
+  final int index;
 
   ExerciseCard({this.exercise, this.index});
 
   @override
   Widget build(BuildContext context) {
-    // print(ex);
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ExerciseDetail(
-              exercise: exercise,
-            ),
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+      padding: EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+        color: MyColors.white,
+        borderRadius: BorderRadius.circular(8.0),
+        boxShadow: [
+          BoxShadow(
+            color: MyColors.accentColor.withOpacity(.3),
+            blurRadius: 6.0,
+            offset: Offset(2.0, 2.0),
+          )
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                exercise.name,
+                style: CardTitleStyle.darkLight,
+              ),
+              Text(
+                '#${index + 1}',
+                style: CardExNumberStyle.light,
+              ),
+            ],
           ),
-        );
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-        padding: EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          color: MyColors.white,
-          borderRadius: BorderRadius.circular(8.0),
-          boxShadow: [
-            BoxShadow(
-              color: MyColors.primaryColor.withOpacity(.3),
-              blurRadius: 6.0,
-              offset: Offset(2.0, 2.0),
-            )
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  exercise.name,
-                  style: CardTitleStyle.darkLight,
-                ),
-                Text(
-                  index.toString(),
-                  style: CardExNumberStyle.light,
-                ),
-              ],
-            ),
-            Text(
-              "${exercise.data.length.toString()} sets",
-              style: CardSubTitleStyle.light,
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 0.0),
-              height: 3.0,
-              decoration: BoxDecoration(
-                  color: MyColors.lightGrey,
-                  borderRadius: BorderRadius.circular(12.0)),
-            ),
-            // buildDataList(exercise),
-          ],
-        ),
+          Text(
+            getSetsNumber(),
+            style: CardSubTitleStyle.light,
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 0.0),
+            height: 3.0,
+            decoration: BoxDecoration(
+                color: MyColors.lightGrey,
+                borderRadius: BorderRadius.circular(12.0)),
+          ),
+          buildDataList(exercise),
+        ],
       ),
     );
   }
 
-  String fun() {
-    String d = json.decode(exercise.data);
+  String getSetsNumber() {
+    int length = json.decode(exercise.data).length;
+    return length < 2
+        ? (length.toString() + " Set")
+        : (length.toString() + " Sets");
   }
 
-  Widget buildDataList(Exercise data) {
-    // AppDatabase appDatabase = AppDatabase();
-    // appDatabase.deleteExercise(data);
-    var dataDecoded = json.decode(data.data);
-    print("data ${data.data}");
+  Widget buildDataList(Exercise exercise) {
+    List dataDecoded = json.decode(exercise.data);
     return Column(
-        children: dataDecoded.map<Widget>((item) {
-      return Row(
-        children: [
-          Text("#$index ", style: CardPreNumStyle.darkLight),
-          Text("f", style: CardValueStyle.light),
-          Text(" Kg for ", style: CardMainStyle.light),
-          Text(item.toString(), style: CardValueStyle.light),
-          Text(" Reps", style: CardMainStyle.light),
-        ],
-      );
-    }).toList());
+      children: [
+        for (var i = 0; i < dataDecoded.length; i++)
+          Row(
+            children: [
+              Text("#${i + 1} ", style: CardPreNumStyle.darkLight),
+              Text("${dataDecoded[i]['weight']}", style: CardValueStyle.light),
+              Text(" Kg for ", style: CardMainStyle.light),
+              Text('${dataDecoded[i]['reps']}', style: CardValueStyle.light),
+              Text(" Reps", style: CardMainStyle.light),
+            ],
+          ),
+
+        // Row(children: dataDecoded.map((e) => Text(e.toString())).toList())
+      ],
+    );
   }
 }
+
+//col -> row
+
+//  Text("#$index ", style: CardPreNumStyle.darkLight),
+//           Text("f", style: CardValueStyle.light),
+//           Text(" Kg for ", style: CardMainStyle.light),
+//           Text(item.toString(), style: CardValueStyle.light),
+//           Text(" Reps", style: CardMainStyle.light),

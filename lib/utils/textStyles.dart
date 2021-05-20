@@ -4,31 +4,31 @@ import 'package:workout_tracker/utils/colors.dart';
 class AppBarTitleStyle {
   static const light = TextStyle(
     color: MyColors.white,
-    fontSize: 32.0,
+    fontSize: 30.0,
     fontStyle: FontStyle.italic,
-    fontWeight: FontWeight.w900,
+    fontWeight: FontWeight.w800,
   );
 
   static const dark = TextStyle(
     color: MyColors.black,
-    fontSize: 32.0,
+    fontSize: 30.0,
     fontStyle: FontStyle.italic,
-    fontWeight: FontWeight.w900,
+    fontWeight: FontWeight.w800,
   );
 }
 
 class CardTitleStyle {
   static const darkLight = TextStyle(
-    color: MyColors.primaryColor,
+    color: MyColors.accentColor,
     fontSize: 28.0,
-    fontWeight: FontWeight.w900,
+    fontWeight: FontWeight.w800,
   );
 }
 
 class CardExNumberStyle {
   static const light = TextStyle(
     color: MyColors.lightGrey,
-    fontSize: 28.0,
+    fontSize: 24.0,
     fontWeight: FontWeight.w900,
   );
 }
@@ -36,7 +36,7 @@ class CardExNumberStyle {
 class CardSubTitleStyle {
   static const light = TextStyle(
     color: MyColors.black,
-    fontSize: 24.0,
+    fontSize: 22.0,
     fontWeight: FontWeight.w900,
   );
 }
@@ -52,9 +52,9 @@ class CardPreNumStyle {
 
 class CardValueStyle {
   static const light = TextStyle(
-    color: Colors.blue,
+    color: MyColors.accentColor,
     fontSize: 18.0,
-    fontWeight: FontWeight.w900,
+    fontWeight: FontWeight.w800,
     height: 1.2,
   );
 }
@@ -63,7 +63,7 @@ class CardMainStyle {
   static const light = TextStyle(
     color: MyColors.black,
     fontSize: 18.0,
-    fontWeight: FontWeight.w900,
+    fontWeight: FontWeight.w800,
     height: 1.2,
   );
 }
@@ -98,7 +98,8 @@ class SetListCount {
   static const light = TextStyle(
     color: MyColors.lightGrey,
     fontSize: 18.0,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w800,
+    height: 1.2,
   );
 }
 
@@ -106,7 +107,8 @@ class SetListValue {
   static const light = TextStyle(
     color: MyColors.accentColor,
     fontSize: 18.0,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w800,
+    height: 1.2,
   );
 }
 
@@ -114,6 +116,28 @@ class SetListText {
   static const light = TextStyle(
     color: MyColors.black,
     fontSize: 18.0,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w800,
+    height: 1.2,
+  );
+}
+
+//Dialoge styles
+class DialogTitleStyle {
+  static const light = TextStyle(
+    color: MyColors.black,
+    fontSize: 18.0,
+    fontWeight: FontWeight.w800,
+  );
+}
+
+class DialogActionPositive {
+  static const light = TextStyle(
+    color: MyColors.accentColor,
+  );
+}
+
+class DialogActionNegative {
+  static const light = TextStyle(
+    color: MyColors.lightGrey,
   );
 }

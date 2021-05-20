@@ -1,4 +1,3 @@
-
 import 'package:moor_flutter/moor_flutter.dart';
 part 'moor_db.g.dart';
 
