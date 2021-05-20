@@ -24,17 +24,18 @@ class Exercise extends DataClass implements Insertable<Exercise> {
   factory Exercise.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
-    final intType = db.typeSystem.forDartType<int>();
-    final stringType = db.typeSystem.forDartType<String>();
-    final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return Exercise(
-      id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
-      sets: intType.mapFromDatabaseResponse(data['${effectivePrefix}sets']),
-      data: stringType.mapFromDatabaseResponse(data['${effectivePrefix}data']),
-      note: stringType.mapFromDatabaseResponse(data['${effectivePrefix}note']),
-      date:
-          dateTimeType.mapFromDatabaseResponse(data['${effectivePrefix}date']),
+      id: const IntType().mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      name: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}name']),
+      sets: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}sets']),
+      data: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}data']),
+      note: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}note']),
+      date: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}date']),
     );
   }
   @override
@@ -133,7 +134,7 @@ class Exercise extends DataClass implements Insertable<Exercise> {
           $mrjc(sets.hashCode,
               $mrjc(data.hashCode, $mrjc(note.hashCode, date.hashCode))))));
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Exercise &&
           other.id == this.id &&

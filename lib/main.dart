@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_tracker/db/moor_db.dart';
+import 'package:workout_tracker/pages/exercise_list.dart';
 import 'package:workout_tracker/utils/colors.dart';
-import 'pages/home_page.dart';
 
 void main() async {
   runApp(MyApp());
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
           accentColor: Colors.redAccent,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: HomePage(),
+        home: ExerciseList(),
       ),
     );
   }

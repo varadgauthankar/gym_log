@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -50,7 +48,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
 
   //This method sets all the field to their value when on editing screen
   // fields are empty when user crates new exercicse
-  setAllTheInputs() {
+  void setAllTheInputs() {
     nameController.text = widget.exercise.name;
     noteController.text = widget.exercise.note;
 
@@ -90,82 +88,86 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
       ),
       body: Form(
         key: formKey,
-        child: Container(
-          padding: EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Exercise Name Text Field
-              TextFormField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Exercise name",
-                  hintText: "Exercise name",
-                ),
-                autofocus: widget.isEdit ? false : true,
-                validator: (value) {
-                  if (value.isEmpty)
-                    return 'Please enter the exercise name';
-                  else
-                    return null;
-                },
-              ),
+        child: ListView(
+          children: [
+            Container(
+              padding: EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Exercise Name Text Field
+                  TextFormField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Exercise name",
+                      hintText: "Exercise name",
+                    ),
+                    autofocus: widget.isEdit ? false : true,
+                    validator: (value) {
+                      if (value.isEmpty)
+                        return 'Please enter the exercise name';
+                      else
+                        return null;
+                    },
+                  ),
 
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0),
-                child: Text(
-                  "Sets",
-                  style: CardSubTitleStyle.light,
-                ),
-              ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 0),
+                    child: Text(
+                      "Sets",
+                      style: CardSubTitleStyle.light,
+                    ),
+                  ),
 
-              // build Sets list with their data
-              buildSetList(setsData),
+                  // build Sets list with their data
+                  buildSetList(setsData),
 
-              // Button to add set
-              FlatButton(
-                child: Text(
-                  "+ Add Set",
-                  style: AddSetButtonStyle.light,
-                ),
-                onPressed: showInputDialog,
-              ),
+                  // Button to add set
+                  FlatButton(
+                    child: Text(
+                      "+ Add Set",
+                      style: AddSetButtonStyle.light,
+                    ),
+                    onPressed: showInputDialog,
+                  ),
 
-              // note text
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: noteController,
-                      keyboardType: TextInputType.multiline,
-                      maxLines: null,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Note",
-                        hintText: "Note",
-                      ),
-                    )
-                  ],
-                ),
+                  // note textfiled
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextField(
+                          controller: noteController,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Note",
+                            hintText: "Note",
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
 
       // Floating action Button
+      //chnage fab according to the screen user on, edit or create.
       floatingActionButton:
           widget.isEdit ? editExerciseButton() : createNewExerciseButton(),
     );
   }
 
 //ConfirmDelete of exercise
-
   void confirmDelete() {
     showDialog(
         context: context,
@@ -217,13 +219,11 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
           label: 'Save',
           onTap: () {
             String setsDataString = json.encode(setsData);
-            final exercicse = Exercise(
-              id: widget.exercise.id,
+            final exercicse = widget.exercise.copyWith(
               name: nameController.text,
               sets: setsData.length,
               data: setsDataString,
               note: noteController.text,
-              date: widget.exercise.date,
             );
 
             final database = Provider.of<AppDatabase>(context, listen: false);
@@ -244,10 +244,10 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
   }
 
 //Normal Floating action button
-
   FloatingActionButton createNewExerciseButton() {
     return FloatingActionButton(
       heroTag: 'fab',
+      backgroundColor: MyColors.primaryColor,
       child: Icon(
         Icons.done_rounded,
         color: MyColors.black,
@@ -351,14 +351,14 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
             ),
           ),
           actions: [
-            FlatButton(
+            TextButton(
               child: Text(
                 "CANCEL",
                 style: DialogActionNegative.light,
               ),
               onPressed: () => Navigator.pop(context),
             ),
-            FlatButton(
+            TextButton(
               child: Text("ADD", style: DialogActionPositive.light),
               onPressed: addSet,
             )
@@ -368,6 +368,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
     );
   }
 
+//Build the List of sets
   Widget buildSetList(List<Data> setsData) {
     return Column(children: [
       for (var i = 0; i < setsData.length; i++)
@@ -384,13 +385,5 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
           ),
         ),
     ]);
-  }
-
-  Widget setTextFieldContainer({Widget child}) {
-    return Container(
-      width: 50.0,
-      margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 0.0),
-      child: child,
-    );
   }
 }

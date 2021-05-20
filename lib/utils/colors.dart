@@ -2,8 +2,8 @@ import "dart:ui";
 import 'package:flutter/material.dart';
 
 class MyColors {
-  static const primaryColor = Colors.blue; //Color(0xFF90CAF9);
-  static const accentColor = Colors.redAccent;
+  static const primaryColor = Colors.red; //Color(0xFF90CAF9);
+  static const accentColor = Colors.red;
 
   static const transparent = Colors.transparent;
   static const white = Colors.white;
