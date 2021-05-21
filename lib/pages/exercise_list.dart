@@ -20,9 +20,9 @@ class _ExerciseListState extends State<ExerciseList> {
 
   //get the date
   void getExerciseOnDate() async {
-    DateTime newDate = await selectDate(context);
+    DateTime newDate = await selectDate(context, date);
     setState(() {
-      date = newDate;
+      date = newDate.add(Duration(days: 1)).subtract(Duration(seconds: 1));
     });
   }
 
@@ -65,6 +65,7 @@ class _ExerciseListState extends State<ExerciseList> {
               builder: (context) => ExerciseDetail(
                 isEdit: false,
                 exercise: null,
+                date: date,
               ),
             ),
           );
