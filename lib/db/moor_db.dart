@@ -28,16 +28,18 @@ class AppDatabase extends _$AppDatabase {
   Future deleteExercise(Exercise exercise) =>
       delete(exercises).delete(exercise);
 
+//wathc the exercises with the date passed
   Stream<List<Exercise>> watchExerciseWithDate({DateTime date}) {
     return (select(exercises)
-          ..where((exercises) {
-            return exercises.date.day.equals(date.day) &
-                exercises.date.month.equals(date.month) &
-                exercises.date.year.equals(date.year);
+          ..where((exercise) {
+            return (exercise.date.day).equals(date.day) &
+                exercise.date.month.equals(date.month) &
+                exercise.date.year.equals(date.year);
           }))
         .watch();
   }
 
+//return the oldest exercise
   Future<Exercise> oldestExercise() {
     return (select(exercises)
           ..orderBy([
