@@ -9,9 +9,10 @@ import 'package:workout_tracker/utils/colors.dart';
 import 'package:workout_tracker/utils/textStyles.dart';
 
 class ExerciseDetail extends StatefulWidget {
-  ExerciseDetail({this.exercise, this.isEdit});
+  ExerciseDetail({this.exercise, this.isEdit, this.date});
   final Exercise exercise;
   final bool isEdit;
+  final DateTime date;
   @override
   _ExerciseDetailState createState() => _ExerciseDetailState();
 }
@@ -125,7 +126,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
                   buildSetList(setsData),
 
                   // Button to add set
-                  FlatButton(
+                  TextButton(
                     child: Text(
                       "+ Add Set",
                       style: AddSetButtonStyle.light,
@@ -179,14 +180,14 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
             title: Text('Delete ${widget.exercise.name}?'),
             content: Text('Exercise will be deleted!'),
             actions: [
-              FlatButton(
+              TextButton(
                 child: Text(
                   'CANCEL',
                   style: DialogActionNegative.light,
                 ),
                 onPressed: () => Navigator.pop(context),
               ),
-              FlatButton(
+              TextButton(
                 child: Text(
                   'DELETE',
                   style: DialogActionPositive.light,
@@ -258,12 +259,12 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
           //check if atleast one set is present
           if (setsData.isNotEmpty) {
             final setsDataString = jsonEncode(setsData);
-
+            print(widget.date);
             final exercise = Exercise(
               id: null,
               name: nameController.text,
               sets: setsData.length,
-              date: DateTime.now(),
+              date: widget.date,
               note: noteController.text,
               data: setsDataString,
             );
