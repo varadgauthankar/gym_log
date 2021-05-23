@@ -156,3 +156,21 @@ class PopupMenuNegative {
     fontWeight: FontWeight.w600,
   );
 }
+
+//no data image
+class NoDataHeading {
+  static const light = TextStyle(
+    color: MyColors.black,
+    fontWeight: FontWeight.w600,
+    fontSize: 16.0,
+  );
+}
+
+class NoDataSubtitle {
+  static const light = TextStyle(
+    color: MyColors.black,
+    fontWeight: FontWeight.w600,
+    fontSize: 14.0,
+    height: 1.3,
+  );
+}
