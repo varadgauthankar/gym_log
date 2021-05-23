@@ -99,7 +99,7 @@ class SetListCount {
     color: MyColors.lightGrey,
     fontSize: 18.0,
     fontWeight: FontWeight.w800,
-    height: 1.2,
+    height: 1.5,
   );
 }
 
@@ -108,7 +108,7 @@ class SetListValue {
     color: MyColors.accentColor,
     fontSize: 18.0,
     fontWeight: FontWeight.w800,
-    height: 1.2,
+    height: 1.5,
   );
 }
 
@@ -117,7 +117,7 @@ class SetListText {
     color: MyColors.black,
     fontSize: 18.0,
     fontWeight: FontWeight.w800,
-    height: 1.2,
+    height: 1.5,
   );
 }
 
@@ -139,5 +139,20 @@ class DialogActionPositive {
 class DialogActionNegative {
   static const light = TextStyle(
     color: MyColors.lightGrey,
+  );
+}
+
+//popup menu
+class PopupMenuPositive {
+  static const light = TextStyle(
+    color: MyColors.accentColor,
+    fontWeight: FontWeight.w600,
+  );
+}
+
+class PopupMenuNegative {
+  static const light = TextStyle(
+    color: MyColors.black,
+    fontWeight: FontWeight.w600,
   );
 }

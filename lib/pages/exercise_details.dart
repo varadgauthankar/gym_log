@@ -42,9 +42,33 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
       setState(() {
         setsData.add(data);
       });
-
+      repsController.clear();
+      weightController.clear();
       Navigator.pop(context);
     }
+  }
+
+  void updateSet(int index) {
+    if (formKey1.currentState.validate()) {
+      Data data = Data(
+        reps: int.parse(repsController.text),
+        weight: double.parse(weightController.text),
+      );
+
+      setState(() {
+        setsData.removeAt(index);
+        setsData.insert(index, data);
+      });
+      repsController.clear();
+      weightController.clear();
+      Navigator.pop(context);
+    }
+  }
+
+  void deleteSet(int index) {
+    setState(() {
+      setsData.removeAt(index);
+    });
   }
 
   //This method sets all the field to their value when on editing screen
@@ -63,6 +87,11 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
 
       setsData.add(data);
     }
+  }
+
+  void snackBar(BuildContext context, {String content}) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(content)));
   }
 
   @override
@@ -131,7 +160,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
                       "+ Add Set",
                       style: AddSetButtonStyle.light,
                     ),
-                    onPressed: showInputDialog,
+                    onPressed: showSetsInputDialog,
                   ),
 
                   // note textfiled
@@ -219,17 +248,23 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
           backgroundColor: Colors.green,
           label: 'Save',
           onTap: () {
-            String setsDataString = json.encode(setsData);
-            final exercicse = widget.exercise.copyWith(
-              name: nameController.text,
-              sets: setsData.length,
-              data: setsDataString,
-              note: noteController.text,
-            );
+            if (formKey.currentState.validate()) {
+              if (setsData.isNotEmpty) {
+                String setsDataString = json.encode(setsData);
+                final exercicse = widget.exercise.copyWith(
+                  name: nameController.text,
+                  sets: setsData.length,
+                  data: setsDataString,
+                  note: noteController.text,
+                );
 
-            final database = Provider.of<AppDatabase>(context, listen: false);
-            database.updateExercise(exercicse);
-            Navigator.pop(context);
+                final database =
+                    Provider.of<AppDatabase>(context, listen: false);
+                database.updateExercise(exercicse);
+                Navigator.pop(context);
+              } else
+                snackBar(context, content: 'Please enter atleast one set!');
+            }
           },
         ),
         SpeedDialChild(
@@ -277,8 +312,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
             Navigator.pop(context);
           } else {
             //show snackbar if set is empty
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Please enter atleast one set!')));
+            snackBar(context, content: 'Please enter atleast one set!');
           }
         }
       },
@@ -286,9 +320,14 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
   }
 
 //Input Dialog to Accept Sets Detail
-  void showInputDialog() {
+  void showSetsInputDialog(
+      {List<Data> setData, int index, bool isEdit = false}) {
     FocusNode weight = FocusNode();
     FocusNode reps = FocusNode();
+    if (isEdit) {
+      weightController.text = setData[index].weight.toString();
+      repsController.text = setData[index].reps.toString();
+    }
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -296,11 +335,14 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),
+          // all the messy paddings lmao
           titlePadding: EdgeInsets.only(top: 16.0, left: 16.0),
           contentPadding:
               EdgeInsets.only(top: 16.0, right: 16.0, bottom: 0.0, left: 16.0),
           actionsPadding: EdgeInsets.only(top: 0),
-          title: Text("Add Set", style: DialogTitleStyle.light),
+          //
+          title: Text(isEdit ? "Edit Set #${index + 1}" : "Add Set",
+              style: DialogTitleStyle.light),
           content: Form(
             key: formKey1,
             child: Column(
@@ -308,7 +350,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
               children: [
                 TextFormField(
                   focusNode: weight,
-                  autofocus: true,
+                  autofocus: isEdit ? false : true,
                   controller: weightController,
                   keyboardType: TextInputType.number,
                   decoration:
@@ -360,29 +402,116 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
               onPressed: () => Navigator.pop(context),
             ),
             TextButton(
-              child: Text("ADD", style: DialogActionPositive.light),
-              onPressed: addSet,
-            )
+              child: Text(isEdit ? "UPDATE" : "ADD",
+                  style: DialogActionPositive.light),
+              onPressed: () {
+                isEdit ? updateSet(index) : addSet();
+              },
+            ),
           ],
         );
       },
     );
   }
 
-//Build the List of sets
   Widget buildSetList(List<Data> setsData) {
+    // int i = 0;
+    return Column(
+      children: [
+        for (var i = 0; i < setsData.length; i++)
+          Container(
+            child: PopupMenuButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              onSelected: (value) {
+                if (value == 'edit')
+                  showSetsInputDialog(
+                      index: i, isEdit: true, setData: setsData);
+                else
+                  deleteSet(i);
+              },
+              tooltip: 'Show options',
+              child: Row(
+                children: [
+                  Text("#${(i + 1).toString()}  ", style: SetListCount.light),
+                  Text("${setsData[i].weight} ", style: SetListValue.light),
+                  Text("Kg ", style: SetListText.light),
+                  Text("for ", style: SetListText.light),
+                  Text("${setsData[i].reps} ", style: SetListValue.light),
+                  Text("Reps", style: SetListText.light),
+                ],
+              ),
+              itemBuilder: (context) {
+                return <PopupMenuItem>[
+                  PopupMenuItem(
+                    child: Text('EDIT', style: PopupMenuNegative.light),
+                    value: 'edit',
+                  ),
+                  PopupMenuItem(
+                    child: Text('DELETE', style: PopupMenuPositive.light),
+                    value: 'delete',
+                  ),
+                ];
+              },
+            ),
+          ),
+      ],
+    );
+  }
+
+//Build the List of sets
+  Widget buildSetListf(List<Data> setsData) {
     return Column(children: [
       for (var i = 0; i < setsData.length; i++)
         Container(
-          child: Row(
-            children: [
-              Text("#${(i + 1).toString()}  ", style: SetListCount.light),
-              Text("${setsData[i].weight} ", style: SetListValue.light),
-              Text("Kg ", style: SetListText.light),
-              Text("for ", style: SetListText.light),
-              Text("${setsData[i].reps} ", style: SetListValue.light),
-              Text("Reps", style: SetListText.light),
-            ],
+          child: GestureDetector(
+            child: Row(
+              children: [
+                Text("#${(i + 1).toString()}  ", style: SetListCount.light),
+                Text("${setsData[i].weight} ", style: SetListValue.light),
+                Text("Kg ", style: SetListText.light),
+                Text("for ", style: SetListText.light),
+                Text("${setsData[i].reps} ", style: SetListValue.light),
+                Text("Reps", style: SetListText.light),
+              ],
+            ),
+
+            // onTapDown: (TapDownDetails tapDetails) {
+            //   tapPosition = tapDetails.globalPosition;
+            // },
+            // onLongPress: () {
+            //   final RenderBox overlay =
+            //       Overlay.of(context).context.findRenderObject();
+
+            //   showMenu(
+            //       shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(8.0),
+            //       ),
+            //       context: context,
+            //       position: RelativeRect.fromLTRB(
+            //         tapPosition.dx,
+            //         tapPosition.dy,
+            //         overlay.size.width - tapPosition.dx,
+            //         overlay.size.height - tapPosition.dy,
+            //       ),
+            //       items: <PopupMenuEntry>[
+            //         PopupMenuItem(
+            //           value: i,
+            //           child: TextButton(
+            //             child: Text("DELETE"),
+            //             onPressed: () {},
+            //           ),
+            //         ),
+            //         PopupMenuItem(
+            //           value: i,
+            //           child: TextButton(
+            //             child: Text("EDIT"),
+            //             onPressed: () {},
+            //           ),
+            //         ),
+            //       ]);
+            // },
           ),
         ),
     ]);
