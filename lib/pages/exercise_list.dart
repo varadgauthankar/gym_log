@@ -109,8 +109,21 @@ class _ExerciseListState extends State<ExerciseList> {
             );
           } else
             return Center(
-                child:
-                    Text("No Exercises yet")); //Add a beautiful graphics here
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/no_data.png',
+                    height: 150.0,
+                    width: 150.0,
+                  ),
+                  SizedBox(height: 12),
+                  Text('No exercises yet!', style: NoDataHeading.light),
+                  Text('click  +  to add the exercise',
+                      style: NoDataSubtitle.light),
+                ],
+              ),
+            );
         } else {
           return Center(child: CircularProgressIndicator());
         }
