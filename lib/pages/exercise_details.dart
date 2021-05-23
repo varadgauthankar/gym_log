@@ -476,42 +476,6 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
                 Text("Reps", style: SetListText.light),
               ],
             ),
-
-            // onTapDown: (TapDownDetails tapDetails) {
-            //   tapPosition = tapDetails.globalPosition;
-            // },
-            // onLongPress: () {
-            //   final RenderBox overlay =
-            //       Overlay.of(context).context.findRenderObject();
-
-            //   showMenu(
-            //       shape: RoundedRectangleBorder(
-            //         borderRadius: BorderRadius.circular(8.0),
-            //       ),
-            //       context: context,
-            //       position: RelativeRect.fromLTRB(
-            //         tapPosition.dx,
-            //         tapPosition.dy,
-            //         overlay.size.width - tapPosition.dx,
-            //         overlay.size.height - tapPosition.dy,
-            //       ),
-            //       items: <PopupMenuEntry>[
-            //         PopupMenuItem(
-            //           value: i,
-            //           child: TextButton(
-            //             child: Text("DELETE"),
-            //             onPressed: () {},
-            //           ),
-            //         ),
-            //         PopupMenuItem(
-            //           value: i,
-            //           child: TextButton(
-            //             child: Text("EDIT"),
-            //             onPressed: () {},
-            //           ),
-            //         ),
-            //       ]);
-            // },
           ),
         ),
     ]);
