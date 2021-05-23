@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:workout_tracker/db/moor_db.dart';
-import 'package:workout_tracker/models/data_model.dart';
-import 'package:workout_tracker/pages/exercise_details.dart';
 import 'package:workout_tracker/utils/colors.dart';
 import 'package:workout_tracker/utils/textStyles.dart';
 
@@ -23,7 +21,7 @@ class ExerciseCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
         boxShadow: [
           BoxShadow(
-            color: MyColors.accentColor.withOpacity(.3),
+            color: MyColors.black.withOpacity(.3),
             blurRadius: 6.0,
             offset: Offset(2.0, 2.0),
           )
@@ -83,17 +81,7 @@ class ExerciseCard extends StatelessWidget {
               Text(" Reps", style: CardMainStyle.light),
             ],
           ),
-
-        // Row(children: dataDecoded.map((e) => Text(e.toString())).toList())
       ],
     );
   }
 }
-
-//col -> row
-
-//  Text("#$index ", style: CardPreNumStyle.darkLight),
-//           Text("f", style: CardValueStyle.light),
-//           Text(" Kg for ", style: CardMainStyle.light),
-//           Text(item.toString(), style: CardValueStyle.light),
-//           Text(" Reps", style: CardMainStyle.light),
