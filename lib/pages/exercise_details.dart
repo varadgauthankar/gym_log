@@ -108,9 +108,14 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
       appBar: AppBar(
         backgroundColor: MyColors.white,
         elevation: 3,
-        title: Text(
-          "Edit Exercise",
-          style: AppBarTitleStyle.dark,
+        title: Hero(
+          tag: 'appBarTitle',
+          child: Material(
+            child: Text(
+              "Edit Exercise",
+              style: AppBarTitleStyle.dark,
+            ),
+          ),
         ),
         leading: IconButton(
             icon: Icon(Icons.arrow_back_ios, color: Colors.black),
@@ -239,6 +244,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
     return SpeedDial(
       animatedIcon: AnimatedIcons.menu_close,
       heroTag: 'fab',
+      elevation: 3.0,
       closeManually: false,
       backgroundColor: MyColors.accentColor,
       activeBackgroundColor: Colors.pink,
@@ -283,6 +289,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
   FloatingActionButton createNewExerciseButton() {
     return FloatingActionButton(
       heroTag: 'fab',
+      elevation: 3.0,
       backgroundColor: MyColors.primaryColor,
       child: Icon(
         Icons.done_rounded,

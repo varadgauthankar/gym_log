@@ -7,6 +7,7 @@ class AppBarTitleStyle {
     fontSize: 30.0,
     fontStyle: FontStyle.italic,
     fontWeight: FontWeight.w800,
+    decoration: TextDecoration.none,
   );
 
   static const dark = TextStyle(
@@ -14,6 +15,7 @@ class AppBarTitleStyle {
     fontSize: 30.0,
     fontStyle: FontStyle.italic,
     fontWeight: FontWeight.w800,
+    decoration: TextDecoration.none,
   );
 }
 

@@ -32,9 +32,14 @@ class _ExerciseListState extends State<ExerciseList> {
       appBar: AppBar(
           backgroundColor: MyColors.white,
           elevation: 2,
-          title: Text(
-            DateFormat('EEE, d').format(date),
-            style: AppBarTitleStyle.dark,
+          title: Hero(
+            tag: 'appBarTitle',
+            child: Material(
+              child: Text(
+                DateFormat('EEE, d').format(date),
+                style: AppBarTitleStyle.dark,
+              ),
+            ),
           ),
           actions: [
             IconButton(
@@ -54,7 +59,7 @@ class _ExerciseListState extends State<ExerciseList> {
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'fab',
-        elevation: 2.0,
+        elevation: 3.0,
         child: Icon(Icons.add),
         foregroundColor: MyColors.black,
         backgroundColor: MyColors.accentColor,
