@@ -1,3 +1,4 @@
+import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_tracker/db/moor_db.dart';
@@ -7,6 +8,7 @@ import 'package:workout_tracker/utils/date_picker.dart';
 import 'package:workout_tracker/utils/textStyles.dart';
 import 'package:workout_tracker/widgets/card.dart';
 import 'package:intl/intl.dart';
+import 'package:workout_tracker/utils/helpers.dart';
 
 class ExerciseList extends StatefulWidget {
   @override
@@ -26,15 +28,20 @@ class _ExerciseListState extends State<ExerciseList> {
     });
   }
 
+  //
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:
+          isThemeDark(context) ? MyColors.darkGrey : MyColors.white,
       appBar: AppBar(
-          backgroundColor: MyColors.white,
+          // backgroundColor: MyColors.accentColor,
           elevation: 2,
           title: Hero(
             tag: 'appBarTitle',
             child: Material(
+              color: Colors.transparent,
               child: Text(
                 DateFormat('EEE, d').format(date),
                 style: AppBarTitleStyle.dark,
@@ -43,26 +50,45 @@ class _ExerciseListState extends State<ExerciseList> {
           ),
           actions: [
             IconButton(
-              icon: Icon(Icons.calendar_today_rounded, color: Colors.black),
+              icon: Icon(
+                themeMode(context) == ThemeMode.dark
+                    ? Icons.brightness_5_rounded
+                    : themeMode(context) == ThemeMode.light
+                        ? Icons.brightness_4_rounded
+                        : Icons.brightness_auto_rounded,
+                color: MyColors.white,
+              ),
+              tooltip: 'Select date',
+              onPressed: () {
+                EasyDynamicTheme.of(context).changeTheme();
+              },
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.calendar_today_rounded,
+                color: MyColors.white,
+              ),
               tooltip: 'Select date',
               onPressed: () {
                 getExerciseOnDate();
               },
             ),
           ]),
-      body: Column(
-        children: [
-          Expanded(
-            child: buildExerciseList(context),
-          )
-        ],
+      body: Container(
+        child: Column(
+          children: [
+            Expanded(
+              child: buildExerciseList(context),
+            )
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'fab',
         elevation: 3.0,
         child: Icon(Icons.add),
-        foregroundColor: MyColors.black,
-        backgroundColor: MyColors.accentColor,
+        // foregroundColor: MyColors.black,
+        // backgroundColor: MyColors.accentColor,
         onPressed: () {
           Navigator.push(
             context,
@@ -90,14 +116,13 @@ class _ExerciseListState extends State<ExerciseList> {
         if (snapshot.hasData) {
           if (snapshot.data.isNotEmpty) {
             return ListView.builder(
+              padding: EdgeInsets.all(6.0),
               itemCount: exercises.length,
               itemBuilder: (_, index) {
                 final exercise = exercises[index];
-                return GestureDetector(
-                  child: ExerciseCard(
-                    exercise: exercise,
-                    index: index,
-                  ),
+                return ExerciseCard(
+                  exercise: exercise,
+                  index: index,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -123,9 +148,14 @@ class _ExerciseListState extends State<ExerciseList> {
                     width: 150.0,
                   ),
                   SizedBox(height: 12),
-                  Text('No exercises yet!', style: NoDataHeading.light),
+                  Text('No exercises yet!',
+                      style: isThemeDark(context)
+                          ? NoDataHeading.dark
+                          : NoDataHeading.light),
                   Text('click  +  to add the exercise',
-                      style: NoDataSubtitle.light),
+                      style: isThemeDark(context)
+                          ? NoDataSubtitle.dark
+                          : NoDataSubtitle.light),
                 ],
               ),
             );

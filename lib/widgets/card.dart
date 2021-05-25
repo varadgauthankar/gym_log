@@ -4,62 +4,87 @@ import 'package:flutter/material.dart';
 import 'package:workout_tracker/db/moor_db.dart';
 import 'package:workout_tracker/utils/colors.dart';
 import 'package:workout_tracker/utils/textStyles.dart';
+import 'package:workout_tracker/utils/helpers.dart';
 
 class ExerciseCard extends StatelessWidget {
   final Exercise exercise;
   final int index;
+  final Function onTap;
 
-  ExerciseCard({this.exercise, this.index});
+  ExerciseCard({this.exercise, this.index, this.onTap});
+
+  Color getCardOverLayColor(BuildContext context, Color color) {
+    return Color.alphaBlend(ElevationOverlay.overlayColor(context, 1), color);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-      padding: EdgeInsets.all(12.0),
-      decoration: BoxDecoration(
-        color: MyColors.white,
+      margin: EdgeInsets.all(6.0),
+      child: Material(
+        elevation: 3,
+        color: isThemeDark(context)
+            ? getCardOverLayColor(context, MyColors.darkGrey)
+            : Colors.white,
         borderRadius: BorderRadius.circular(8.0),
-        boxShadow: [
-          BoxShadow(
-            color: MyColors.black.withOpacity(.3),
-            blurRadius: 6.0,
-            offset: Offset(2.0, 2.0),
-          )
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                exercise.name,
-                style: CardTitleStyle.darkLight,
-              ),
-              Text(
-                '#${index + 1}',
-                style: CardExNumberStyle.light,
-              ),
-            ],
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8.0),
+          splashColor: MyColors.accentVarientColor,
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      exercise.name,
+                      style: isThemeDark(context)
+                          ? CardTitleStyle.dark
+                          : CardTitleStyle.light,
+                    ),
+                    Text(
+                      '#${index + 1}',
+                      style: CardExNumberStyle.light,
+                    ),
+                  ],
+                ),
+                Text(
+                  getSetsNumber(), //function return the number of sets
+                  style: isThemeDark(context)
+                      ? CardSubTitleStyle.dark
+                      : CardSubTitleStyle.light,
+                ),
+
+                //horizontal line break lol
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 0.0),
+                  height: 3.0,
+                  decoration: BoxDecoration(
+                      color: isThemeDark(context)
+                          ? getCardOverLayColor(
+                              context,
+                              getCardOverLayColor(
+                                  context,
+                                  MyColors
+                                      .darkGrey)) //stupid way to get overlay color of an overlay color
+                          : MyColors.lightGrey,
+                      borderRadius: BorderRadius.circular(12.0)),
+                ),
+
+                //Build the sets data here
+                buildDataList(exercise, context),
+              ],
+            ),
           ),
-          Text(
-            getSetsNumber(),
-            style: CardSubTitleStyle.light,
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 0.0),
-            height: 3.0,
-            decoration: BoxDecoration(
-                color: MyColors.lightGrey,
-                borderRadius: BorderRadius.circular(12.0)),
-          ),
-          buildDataList(exercise),
-        ],
+        ),
       ),
     );
   }
 
+//return the number of sets
   String getSetsNumber() {
     int length = json.decode(exercise.data).length;
     return length < 2
@@ -67,7 +92,8 @@ class ExerciseCard extends StatelessWidget {
         : (length.toString() + " Sets");
   }
 
-  Widget buildDataList(Exercise exercise) {
+//build data
+  Widget buildDataList(Exercise exercise, BuildContext context) {
     List dataDecoded = json.decode(exercise.data);
     return Column(
       children: [
@@ -75,10 +101,22 @@ class ExerciseCard extends StatelessWidget {
           Row(
             children: [
               Text("#${i + 1} ", style: CardPreNumStyle.darkLight),
-              Text("${dataDecoded[i]['weight']}", style: CardValueStyle.light),
-              Text(" Kg for ", style: CardMainStyle.light),
-              Text('${dataDecoded[i]['reps']}', style: CardValueStyle.light),
-              Text(" Reps", style: CardMainStyle.light),
+              Text("${dataDecoded[i]['weight']}",
+                  style: isThemeDark(context)
+                      ? CardValueStyle.dark
+                      : CardValueStyle.light),
+              Text(" Kg for ",
+                  style: isThemeDark(context)
+                      ? CardMainStyle.dark
+                      : CardMainStyle.light),
+              Text('${dataDecoded[i]['reps']}',
+                  style: isThemeDark(context)
+                      ? CardValueStyle.dark
+                      : CardValueStyle.light),
+              Text(" Reps",
+                  style: isThemeDark(context)
+                      ? CardMainStyle.dark
+                      : CardMainStyle.light),
             ],
           ),
       ],

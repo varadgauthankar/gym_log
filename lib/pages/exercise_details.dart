@@ -7,6 +7,7 @@ import 'package:workout_tracker/db/moor_db.dart';
 import 'package:workout_tracker/models/data_model.dart';
 import 'package:workout_tracker/utils/colors.dart';
 import 'package:workout_tracker/utils/textStyles.dart';
+import 'package:workout_tracker/utils/helpers.dart';
 
 class ExerciseDetail extends StatefulWidget {
   ExerciseDetail({this.exercise, this.isEdit, this.date});
@@ -105,12 +106,17 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:
+          isThemeDark(context) ? MyColors.darkGrey : MyColors.white,
       appBar: AppBar(
-        backgroundColor: MyColors.white,
+        // backgroundColor: MyColors.accentColor,
         elevation: 3,
+        foregroundColor: MyColors.white,
+        iconTheme: IconThemeData(color: MyColors.white),
         title: Hero(
           tag: 'appBarTitle',
           child: Material(
+            color: Colors.transparent,
             child: Text(
               "Edit Exercise",
               style: AppBarTitleStyle.dark,
@@ -148,11 +154,12 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 0),
+                    padding: const EdgeInsets.only(top: 12.0),
                     child: Text(
                       "Sets",
-                      style: CardSubTitleStyle.light,
+                      style: isThemeDark(context)
+                          ? CardSubTitleStyle.dark
+                          : CardSubTitleStyle.light,
                     ),
                   ),
 
@@ -163,7 +170,9 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
                   TextButton(
                     child: Text(
                       "+ Add Set",
-                      style: AddSetButtonStyle.light,
+                      style: isThemeDark(context)
+                          ? AddSetButtonStyle.dark
+                          : AddSetButtonStyle.light,
                     ),
                     onPressed: showSetsInputDialog,
                   ),
@@ -202,7 +211,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
     );
   }
 
-//ConfirmDelete of exercise
+//Confirm Delete of exercise
   void confirmDelete() {
     showDialog(
         context: context,
@@ -217,14 +226,18 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
               TextButton(
                 child: Text(
                   'CANCEL',
-                  style: DialogActionNegative.light,
+                  style: isThemeDark(context)
+                      ? DialogActionNegative.dark
+                      : DialogActionNegative.light,
                 ),
                 onPressed: () => Navigator.pop(context),
               ),
               TextButton(
                 child: Text(
                   'DELETE',
-                  style: DialogActionPositive.light,
+                  style: isThemeDark(context)
+                      ? DialogActionPositive.dark
+                      : DialogActionPositive.light,
                 ),
                 onPressed: () {
                   final database =
@@ -242,17 +255,21 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
 //SpeedDial Floating action button
   SpeedDial editExerciseButton() {
     return SpeedDial(
+      overlayColor: isThemeDark(context) ? MyColors.black : MyColors.white,
       animatedIcon: AnimatedIcons.menu_close,
       heroTag: 'fab',
       elevation: 3.0,
       closeManually: false,
       backgroundColor: MyColors.accentColor,
-      activeBackgroundColor: Colors.pink,
+      foregroundColor: MyColors.black,
       children: [
         SpeedDialChild(
           child: Icon(Icons.save_rounded),
+          foregroundColor: MyColors.black,
           backgroundColor: Colors.green,
           label: 'Save',
+          labelBackgroundColor:
+              isThemeDark(context) ? MyColors.darkGrey : MyColors.white,
           onTap: () {
             if (formKey.currentState.validate()) {
               if (setsData.isNotEmpty) {
@@ -275,8 +292,11 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
         ),
         SpeedDialChild(
           child: Icon(Icons.delete_rounded),
+          foregroundColor: MyColors.black,
           backgroundColor: Colors.redAccent,
           label: 'Delete',
+          labelBackgroundColor:
+              isThemeDark(context) ? MyColors.darkGrey : MyColors.white,
           onTap: () {
             confirmDelete();
           },
@@ -290,7 +310,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
     return FloatingActionButton(
       heroTag: 'fab',
       elevation: 3.0,
-      backgroundColor: MyColors.primaryColor,
+      // backgroundColor: MyColors.primaryColor,
       child: Icon(
         Icons.done_rounded,
         color: MyColors.black,
@@ -348,8 +368,12 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
               EdgeInsets.only(top: 16.0, right: 16.0, bottom: 0.0, left: 16.0),
           actionsPadding: EdgeInsets.only(top: 0),
           //
-          title: Text(isEdit ? "Edit Set #${index + 1}" : "Add Set",
-              style: DialogTitleStyle.light),
+          title: Text(
+            isEdit ? "Edit Set #${index + 1}" : "Add Set",
+            style: isThemeDark(context)
+                ? DialogTitleStyle.dark
+                : DialogTitleStyle.light,
+          ),
           content: Form(
             key: formKey1,
             child: Column(
@@ -360,8 +384,11 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
                   autofocus: isEdit ? false : true,
                   controller: weightController,
                   keyboardType: TextInputType.number,
-                  decoration:
-                      InputDecoration(labelText: "Weight", suffix: Text("Kg")),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Weight",
+                    suffix: Text("Kg"),
+                  ),
                   validator: (value) {
                     if (value.isEmpty)
                       return 'Please enter the weight';
@@ -384,6 +411,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
                   keyboardType: TextInputType.number,
                   controller: repsController,
                   decoration: InputDecoration(
+                    border: OutlineInputBorder(),
                     hintStyle: InputHitnStyle.light,
                     labelText: "Reps",
                   ),
@@ -404,13 +432,19 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
             TextButton(
               child: Text(
                 "CANCEL",
-                style: DialogActionNegative.light,
+                style: isThemeDark(context)
+                    ? DialogActionNegative.dark
+                    : DialogActionNegative.light,
               ),
               onPressed: () => Navigator.pop(context),
             ),
             TextButton(
-              child: Text(isEdit ? "UPDATE" : "ADD",
-                  style: DialogActionPositive.light),
+              child: Text(
+                isEdit ? "UPDATE" : "ADD",
+                style: isThemeDark(context)
+                    ? DialogActionPositive.dark
+                    : DialogActionPositive.light,
+              ),
               onPressed: () {
                 isEdit ? updateSet(index) : addSet();
               },
@@ -421,8 +455,8 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
     );
   }
 
+//Build the list of sets
   Widget buildSetList(List<Data> setsData) {
-    // int i = 0;
     return Column(
       children: [
         for (var i = 0; i < setsData.length; i++)
@@ -441,22 +475,52 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
               tooltip: 'Show options',
               child: Row(
                 children: [
-                  Text("#${(i + 1).toString()}  ", style: SetListCount.light),
-                  Text("${setsData[i].weight} ", style: SetListValue.light),
-                  Text("Kg ", style: SetListText.light),
-                  Text("for ", style: SetListText.light),
-                  Text("${setsData[i].reps} ", style: SetListValue.light),
-                  Text("Reps", style: SetListText.light),
+                  Text(
+                    "#${(i + 1).toString()}  ",
+                    style: isThemeDark(context)
+                        ? SetListCount.dark
+                        : SetListCount.light,
+                  ),
+                  Text(
+                    "${setsData[i].weight} ",
+                    style: isThemeDark(context)
+                        ? SetListValue.dark
+                        : SetListValue.light,
+                  ),
+                  Text("Kg for ",
+                      style: isThemeDark(context)
+                          ? SetListText.dark
+                          : SetListText.light),
+                  Text(
+                    "${setsData[i].reps} ",
+                    style: isThemeDark(context)
+                        ? SetListValue.dark
+                        : SetListValue.light,
+                  ),
+                  Text("Reps",
+                      style: isThemeDark(context)
+                          ? SetListText.dark
+                          : SetListText.light),
                 ],
               ),
               itemBuilder: (context) {
                 return <PopupMenuItem>[
                   PopupMenuItem(
-                    child: Text('EDIT', style: PopupMenuNegative.light),
+                    child: Text(
+                      'EDIT',
+                      style: isThemeDark(context)
+                          ? PopupMenuNegative.dark
+                          : PopupMenuNegative.light,
+                    ),
                     value: 'edit',
                   ),
                   PopupMenuItem(
-                    child: Text('DELETE', style: PopupMenuPositive.light),
+                    child: Text(
+                      'DELETE',
+                      style: isThemeDark(context)
+                          ? PopupMenuPositive.dark
+                          : PopupMenuPositive.light,
+                    ),
                     value: 'delete',
                   ),
                 ];
@@ -465,26 +529,5 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
           ),
       ],
     );
-  }
-
-//Build the List of sets
-  Widget buildSetListf(List<Data> setsData) {
-    return Column(children: [
-      for (var i = 0; i < setsData.length; i++)
-        Container(
-          child: GestureDetector(
-            child: Row(
-              children: [
-                Text("#${(i + 1).toString()}  ", style: SetListCount.light),
-                Text("${setsData[i].weight} ", style: SetListValue.light),
-                Text("Kg ", style: SetListText.light),
-                Text("for ", style: SetListText.light),
-                Text("${setsData[i].reps} ", style: SetListValue.light),
-                Text("Reps", style: SetListText.light),
-              ],
-            ),
-          ),
-        ),
-    ]);
   }
 }

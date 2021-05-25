@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_tracker/db/moor_db.dart';
 import 'package:workout_tracker/pages/exercise_list.dart';
+import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:workout_tracker/utils/colors.dart';
+import 'package:workout_tracker/utils/theme_stuff.dart';
 
 void main() async {
-  runApp(MyApp());
+  runApp(
+      EasyDynamicThemeWidget(initialThemeMode: ThemeMode.dark, child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -16,20 +19,18 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          inputDecorationTheme: InputDecorationTheme(
-            border: OutlineInputBorder(),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: MyColors.accentColor,
-                width: 2.0,
-              ),
-            ),
-          ),
           brightness: Brightness.light,
-          primarySwatch: Colors.red,
-          accentColor: Colors.redAccent,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+          primaryColor: MyColors.primaryColor,
+          accentColor: MyColors.accentColor,
+          primarySwatch: Colors.deepPurple,
         ),
+        darkTheme: ThemeData(
+          brightness: Brightness.dark,
+          primaryColor: MyColors.primaryColor,
+          accentColor: MyColors.accentColor,
+          primarySwatch: Colors.deepPurple,
+        ),
+        themeMode: EasyDynamicTheme.of(context).themeMode,
         home: ExerciseList(),
       ),
     );
