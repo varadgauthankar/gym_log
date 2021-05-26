@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_tracker/db/moor_db.dart';
 import 'package:workout_tracker/pages/exercise_details.dart';
+import 'package:workout_tracker/pages/settings.dart';
 import 'package:workout_tracker/utils/colors.dart';
 import 'package:workout_tracker/utils/date_picker.dart';
 import 'package:workout_tracker/utils/textStyles.dart';
-import 'package:workout_tracker/widgets/card.dart';
+import 'package:workout_tracker/widgets/exercise_card.dart';
 import 'package:intl/intl.dart';
 import 'package:workout_tracker/utils/helpers.dart';
 
@@ -51,20 +52,6 @@ class _ExerciseListState extends State<ExerciseList> {
           actions: [
             IconButton(
               icon: Icon(
-                themeMode(context) == ThemeMode.dark
-                    ? Icons.brightness_5_rounded
-                    : themeMode(context) == ThemeMode.light
-                        ? Icons.brightness_4_rounded
-                        : Icons.brightness_auto_rounded,
-                color: MyColors.white,
-              ),
-              tooltip: 'Select date',
-              onPressed: () {
-                EasyDynamicTheme.of(context).changeTheme();
-              },
-            ),
-            IconButton(
-              icon: Icon(
                 Icons.calendar_today_rounded,
                 color: MyColors.white,
               ),
@@ -73,6 +60,18 @@ class _ExerciseListState extends State<ExerciseList> {
                 getExerciseOnDate();
               },
             ),
+            IconButton(
+                icon: Icon(
+                  themeMode(context) == ThemeMode.dark
+                      ? Icons.brightness_5_rounded
+                      : themeMode(context) == ThemeMode.light
+                          ? Icons.brightness_4_rounded
+                          : Icons.brightness_auto_rounded,
+                  color: MyColors.white,
+                ),
+                tooltip: 'Select date',
+                onPressed: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SettingsPage()))),
           ]),
       body: Container(
         child: Column(

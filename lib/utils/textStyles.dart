@@ -259,3 +259,31 @@ class NoDataSubtitle {
     height: 1.3,
   );
 }
+
+//Settings
+
+class SettingsHeadingStyle {
+  static const light = TextStyle(
+    color: MyColors.accentVarientColor,
+    fontSize: 20.0,
+    fontWeight: FontWeight.w800,
+  );
+  static const dark = TextStyle(
+    color: MyColors.accentColor,
+    fontSize: 20.0,
+    fontWeight: FontWeight.w800,
+  );
+}
+
+class SettingsSubStyle {
+  static const light = TextStyle(
+      // color: MyColors.accentVarientColor,
+      // fontSize: 16.0,
+      // fontWeight: FontWeight.w800,
+      );
+  static const dark = TextStyle(
+      // color: MyColors.accentColor,
+      // fontSize: 16.0,
+      // fontWeight: FontWeight.w800,
+      );
+}

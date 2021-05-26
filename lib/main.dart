@@ -3,8 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:workout_tracker/db/moor_db.dart';
 import 'package:workout_tracker/pages/exercise_list.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
+import 'package:workout_tracker/pages/settings.dart';
 import 'package:workout_tracker/utils/colors.dart';
-import 'package:workout_tracker/utils/theme_stuff.dart';
+import 'package:workout_tracker/utils/theme.dart';
 
 void main() async {
   runApp(
@@ -14,24 +15,25 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (_) => AppDatabase(),
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          brightness: Brightness.light,
-          primaryColor: MyColors.primaryColor,
-          accentColor: MyColors.accentColor,
-          primarySwatch: Colors.deepPurple,
+    return MultiProvider(
+      providers: [
+        Provider(
+          create: (_) => AppDatabase(),
         ),
-        darkTheme: ThemeData(
-          brightness: Brightness.dark,
-          primaryColor: MyColors.primaryColor,
-          accentColor: MyColors.accentColor,
-          primarySwatch: Colors.deepPurple,
-        ),
-        themeMode: EasyDynamicTheme.of(context).themeMode,
-        home: ExerciseList(),
+        ChangeNotifierProvider(
+          create: (_) => ThemeNotifier(),
+        )
+      ],
+      child: Consumer<ThemeNotifier>(
+        builder: (context, ThemeNotifier notifier, child) {
+          return MaterialApp(
+            title: 'Flutter Demo',
+            theme: light,
+            darkTheme: dark,
+            themeMode: notifier.theme,
+            home: ExerciseList(),
+          );
+        },
       ),
     );
   }
