@@ -1,4 +1,3 @@
-import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_tracker/db/moor_db.dart';
@@ -62,11 +61,7 @@ class _ExerciseListState extends State<ExerciseList> {
             ),
             IconButton(
                 icon: Icon(
-                  themeMode(context) == ThemeMode.dark
-                      ? Icons.brightness_5_rounded
-                      : themeMode(context) == ThemeMode.light
-                          ? Icons.brightness_4_rounded
-                          : Icons.brightness_auto_rounded,
+                  Icons.settings_rounded,
                   color: MyColors.white,
                 ),
                 tooltip: 'Select date',
