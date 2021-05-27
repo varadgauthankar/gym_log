@@ -1,2 +1,2 @@
-enum Theme { light, dark, system }
+enum AppTheme { light, dark, system }
 enum WeightUnit { kg, lbs }
