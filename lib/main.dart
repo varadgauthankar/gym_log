@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:workout_tracker/db/moor_db.dart';
 import 'package:workout_tracker/pages/exercise_list.dart';
 import 'package:workout_tracker/utils/theme.dart';
+import 'package:workout_tracker/utils/units.dart';
 
 void main() async {
   runApp(MyApp());
@@ -18,7 +19,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => ThemeNotifier(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UnitsNotifier(),
+        ),
       ],
       child: Consumer<ThemeNotifier>(
         builder: (context, ThemeNotifier notifier, child) {
