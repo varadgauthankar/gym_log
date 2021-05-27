@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_tracker/utils/colors.dart';
+import 'package:workout_tracker/utils/enums.dart';
 import 'package:workout_tracker/utils/helpers.dart';
 import 'package:workout_tracker/utils/textStyles.dart';
 import 'package:workout_tracker/utils/theme.dart';
+import 'package:workout_tracker/utils/units.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -15,15 +18,11 @@ class _SettingsPageState extends State<SettingsPage> {
   List<String> darkThemeChips = ['On', 'Off', 'Follow System'];
   List<String> weightChips = ['Kg', 'Lbs'];
 
-  String darkThemeChoice = "";
-  String weightChoice = "";
+  String darkThemeChoice = ""; //stores the choice of theme
 
-  void changeTheme(String theme) {
-    print('in theme changer with: $theme');
+  WeightUnit weightUnit;
 
-    Provider.of<ThemeNotifier>(context, listen: false).toggleTheme(theme);
-  }
-
+//Build the dark mode chip
   List<Widget> buildDarkModeChoices() {
     List<Widget> choices = [];
     darkThemeChips.forEach((item) {
@@ -44,17 +43,20 @@ class _SettingsPageState extends State<SettingsPage> {
     return choices;
   }
 
+// build the weight unit chips
   List<Widget> buildWeightChoices() {
     List<Widget> choices = [];
-    weightChips.forEach((item) {
+
+    WeightUnit.values.forEach((item) {
       choices.add(Container(
         padding: const EdgeInsets.all(2.0),
         child: ChoiceChip(
-          label: Text(item),
-          selected: weightChoice == item,
+          label: Text(describeEnum(item)), //converts enum to string.
+          selected: weightUnit == item,
           onSelected: (selected) {
             setState(() {
-              weightChoice = item;
+              weightUnit = item;
+              toggleWeightUnits(weightUnit);
             });
           },
         ),
@@ -63,19 +65,31 @@ class _SettingsPageState extends State<SettingsPage> {
     return choices;
   }
 
+  // Change the theme
+  void changeTheme(String theme) {
+    Provider.of<ThemeNotifier>(context, listen: false).toggleTheme(theme);
+  }
+
+  void toggleWeightUnits(WeightUnit data) {
+    Provider.of<UnitsNotifier>(context, listen: false).toggleWeightUnit(data);
+  }
+
+  // SEt the value of the darkmode chip value
   setDarkmodeChipValue() {
     var notifier = Provider.of<ThemeNotifier>(context, listen: false);
     ThemeMode theme = notifier.theme;
     darkThemeChoice = notifier.convertThemeModeDataToString(theme);
   }
 
+  // get the color of the overlay widget, just some material rules.
   Color getOverLayColor(BuildContext context, Color color) {
     return Color.alphaBlend(ElevationOverlay.overlayColor(context, 1), color);
   }
 
   @override
   void initState() {
-    setDarkmodeChipValue();
+    setDarkmodeChipValue(); //sets the chip appropriate value of the chip
+    weightUnit = Provider.of<UnitsNotifier>(context, listen: false).weightUnit;
     super.initState();
   }
 
@@ -174,21 +188,3 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
-
-// class ChoiceChipWidget extends StatefulWidget {
-//   final List<String> reportList;
-
-//   ChoiceChipWidget(this.reportList);
-
-//   @override
-//   _ChoiceChipWidgetState createState() => _ChoiceChipWidgetState();
-// }
-
-// class _ChoiceChipWidgetState extends State<ChoiceChipWidget> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Wrap(
-//       children: _buildChoiceList(),
-//     );
-//   }
-// }
