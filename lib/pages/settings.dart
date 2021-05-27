@@ -14,27 +14,22 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool selected = false;
-  List<String> darkThemeChips = ['On', 'Off', 'Follow System'];
-  List<String> weightChips = ['Kg', 'Lbs'];
-
-  String darkThemeChoice = ""; //stores the choice of theme
-
+  AppTheme appTheme;
   WeightUnit weightUnit;
 
-//Build the dark mode chip
+//Build the dark mode chips
   List<Widget> buildDarkModeChoices() {
     List<Widget> choices = [];
-    darkThemeChips.forEach((item) {
+    AppTheme.values.forEach((item) {
       choices.add(Container(
         padding: const EdgeInsets.all(2.0),
         child: ChoiceChip(
-          label: Text(item),
-          selected: darkThemeChoice == item,
+          label: Text(describeEnum(item)),
+          selected: appTheme == item,
           onSelected: (selected) {
             setState(() {
-              darkThemeChoice = item;
-              changeTheme(darkThemeChoice);
+              appTheme = item;
+              toggleAppTheme(appTheme);
             });
           },
         ),
@@ -65,20 +60,15 @@ class _SettingsPageState extends State<SettingsPage> {
     return choices;
   }
 
-  // Change the theme
-  void changeTheme(String theme) {
-    Provider.of<ThemeNotifier>(context, listen: false).toggleTheme(theme);
+  // toggle the Apptheme
+  void toggleAppTheme(AppTheme appTheme) {
+    Provider.of<ThemeNotifier>(context, listen: false).toggleAppTheme(appTheme);
   }
 
-  void toggleWeightUnits(WeightUnit data) {
-    Provider.of<UnitsNotifier>(context, listen: false).toggleWeightUnit(data);
-  }
-
-  // SEt the value of the darkmode chip value
-  setDarkmodeChipValue() {
-    var notifier = Provider.of<ThemeNotifier>(context, listen: false);
-    ThemeMode theme = notifier.theme;
-    darkThemeChoice = notifier.convertThemeModeDataToString(theme);
+  // Toggle The weights unit
+  void toggleWeightUnits(WeightUnit weightUnit) {
+    Provider.of<UnitsNotifier>(context, listen: false)
+        .toggleWeightUnit(weightUnit);
   }
 
   // get the color of the overlay widget, just some material rules.
@@ -86,10 +76,15 @@ class _SettingsPageState extends State<SettingsPage> {
     return Color.alphaBlend(ElevationOverlay.overlayColor(context, 1), color);
   }
 
+  //Sets Chips to their respective value
+  void setChipValues() {
+    appTheme = Provider.of<ThemeNotifier>(context, listen: false).appTheme;
+    weightUnit = Provider.of<UnitsNotifier>(context, listen: false).weightUnit;
+  }
+
   @override
   void initState() {
-    setDarkmodeChipValue(); //sets the chip appropriate value of the chip
-    weightUnit = Provider.of<UnitsNotifier>(context, listen: false).weightUnit;
+    setChipValues();
     super.initState();
   }
 
