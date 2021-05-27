@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
             title: 'Flutter Demo',
             theme: light,
             darkTheme: dark,
-            themeMode: notifier.theme,
+            themeMode: notifier.themeModeFromEnum(),
             home: ExerciseList(),
           );
         },
