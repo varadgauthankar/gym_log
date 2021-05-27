@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workout_tracker/utils/colors.dart';
+import 'package:workout_tracker/utils/enums.dart';
 
 ThemeData light = ThemeData(
   brightness: Brightness.light,
@@ -17,53 +18,45 @@ ThemeData dark = ThemeData(
 );
 
 class ThemeNotifier extends ChangeNotifier {
-  final String key = "theme";
-  SharedPreferences prefs;
+  final String key = "AppTheme";
 
-  ThemeMode theme;
+  AppTheme appTheme;
 
   ThemeNotifier() {
-    theme = ThemeMode.system;
+    appTheme = AppTheme.light;
     getThemeFromPrefs();
   }
 
-  toggleTheme(String theme) {
-    this.theme = covertStringDataToThemeModeData(theme);
+  toggleAppTheme(AppTheme appTheme) {
+    this.appTheme = appTheme;
     saveThemeToPrefs();
     notifyListeners();
   }
 
-  ThemeMode covertStringDataToThemeModeData(String theme) {
-    if (theme == "On") {
-      return ThemeMode.dark;
-    } else if (theme == "Off") {
-      return ThemeMode.light;
-    } else if (theme == "Follow System") {
-      return ThemeMode.system;
-    } else
-      return ThemeMode.system;
-  }
-
-  String convertThemeModeDataToString(ThemeMode theme) {
-    if (theme == ThemeMode.dark) {
-      return "On";
-    } else if (theme == ThemeMode.light) {
-      return "Off";
-    } else if (theme == ThemeMode.system) {
-      return "Follow System";
-    } else
-      return "Follow System";
-  }
-
   getThemeFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String theme = prefs.getString(key);
-    this.theme = covertStringDataToThemeModeData(theme);
+    String prefsData = prefs.getString(key);
+    this.appTheme = appThemeEnumFromString(prefsData);
     notifyListeners();
   }
 
   saveThemeToPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(key, convertThemeModeDataToString(this.theme));
+    prefs.setString(key, appTheme.toString());
+  }
+
+  AppTheme appThemeEnumFromString(String value) {
+    return AppTheme.values.firstWhere((e) => e.toString() == value);
+  }
+
+  ThemeMode themeModeFromEnum() {
+    if (appTheme == AppTheme.light)
+      return ThemeMode.light;
+    else if (appTheme == AppTheme.dark)
+      return ThemeMode.dark;
+    else if (appTheme == AppTheme.system)
+      return ThemeMode.system;
+    else
+      return ThemeMode.light;
   }
 }
