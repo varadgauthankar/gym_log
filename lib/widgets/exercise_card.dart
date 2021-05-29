@@ -42,11 +42,16 @@ class ExerciseCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      exercise.name,
-                      style: isThemeDark(context)
-                          ? CardTitleStyle.dark
-                          : CardTitleStyle.light,
+                    Container(
+                      width: MediaQuery.of(context).size.width *
+                          0.80, // 80% width if display
+                      child: Text(
+                        exercise.name,
+                        // overflow: TextOverflow.ellipsis,
+                        style: isThemeDark(context)
+                            ? CardTitleStyle.dark
+                            : CardTitleStyle.light,
+                      ),
                     ),
                     // Ecercise number
                     Text(

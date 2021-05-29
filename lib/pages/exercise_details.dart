@@ -157,6 +157,8 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
                     // Exercise Name Text Field
                     TextFormField(
                       controller: nameController,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Exercise name",
@@ -249,6 +251,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
       } else
         snackBar(context, content: 'Please enter atleast one set!');
     }
+    return null;
   }
 
 //Confirm Delete of exercise
