@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:workout_tracker/db/moor_db.dart';
 import 'package:workout_tracker/utils/colors.dart';
+import 'package:workout_tracker/utils/enums.dart';
+import 'package:workout_tracker/utils/units.dart';
 import 'package:workout_tracker/utils/textStyles.dart';
 import 'package:workout_tracker/utils/helpers.dart';
 
@@ -45,6 +48,7 @@ class ExerciseCard extends StatelessWidget {
                           ? CardTitleStyle.dark
                           : CardTitleStyle.light,
                     ),
+                    // Ecercise number
                     Text(
                       '#${index + 1}',
                       style: CardExNumberStyle.light,
@@ -52,7 +56,7 @@ class ExerciseCard extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  getSetsNumber(), //function return the number of sets
+                  getSetsNumber(), //returns the number of sets
                   style: isThemeDark(context)
                       ? CardSubTitleStyle.dark
                       : CardSubTitleStyle.light,
@@ -101,11 +105,23 @@ class ExerciseCard extends StatelessWidget {
           Row(
             children: [
               Text("#${i + 1} ", style: CardPreNumStyle.darkLight),
-              Text("${dataDecoded[i]['weight']}",
+              Text(
+                Provider.of<UnitsNotifier>(context).weightUnit == WeightUnit.kg
+                    ? '${dataDecoded[i]['weight']['kg']}'
+                    : '${dataDecoded[i]['weight']['lbs']}',
+                style: isThemeDark(context)
+                    ? CardValueStyle.dark
+                    : CardValueStyle.light,
+              ),
+              Text(
+                  Provider.of<UnitsNotifier>(context).weightUnit ==
+                          WeightUnit.kg
+                      ? ' Kg'
+                      : ' Lbs', //" Kg",
                   style: isThemeDark(context)
-                      ? CardValueStyle.dark
-                      : CardValueStyle.light),
-              Text(" Kg for ",
+                      ? CardMainStyle.dark
+                      : CardMainStyle.light),
+              Text(" for ",
                   style: isThemeDark(context)
                       ? CardMainStyle.dark
                       : CardMainStyle.light),

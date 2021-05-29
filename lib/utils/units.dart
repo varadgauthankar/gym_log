@@ -35,4 +35,14 @@ class UnitsNotifier extends ChangeNotifier {
   WeightUnit weightEnumFromString(String value) {
     return WeightUnit.values.firstWhere((e) => e.toString() == value);
   }
+
+// function to display date according to the units set by
+  double getWeight(double weight) {
+    if (weightUnit == WeightUnit.kg)
+      return weight;
+    else if (weightUnit == WeightUnit.lbs)
+      return weight * 2.2046; // converts kg to lbs
+    else
+      return 0.0;
+  }
 }

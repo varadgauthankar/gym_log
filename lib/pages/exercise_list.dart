@@ -16,19 +16,16 @@ class ExerciseList extends StatefulWidget {
 }
 
 class _ExerciseListState extends State<ExerciseList> {
-  final String dateToday = DateFormat("EEEE, d").format(DateTime.now());
-
   DateTime date = DateTime.now();
 
   //get the date
   void getExerciseOnDate() async {
     DateTime newDate = await selectDate(context, date);
-    setState(() {
-      date = newDate.add(Duration(days: 1)).subtract(Duration(seconds: 1));
-    });
+    if (newDate != null)
+      setState(() {
+        date = newDate.add(Duration(days: 1)).subtract(Duration(seconds: 1));
+      });
   }
-
-  //
 
   @override
   Widget build(BuildContext context) {
@@ -55,18 +52,17 @@ class _ExerciseListState extends State<ExerciseList> {
                 color: MyColors.white,
               ),
               tooltip: 'Select date',
-              onPressed: () {
-                getExerciseOnDate();
-              },
+              onPressed: () => getExerciseOnDate(),
             ),
             IconButton(
-                icon: Icon(
-                  Icons.settings_rounded,
-                  color: MyColors.white,
-                ),
-                tooltip: 'Select date',
-                onPressed: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SettingsPage()))),
+              icon: Icon(
+                Icons.settings_rounded,
+                color: MyColors.white,
+              ),
+              tooltip: 'Settings',
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SettingsPage())),
+            ),
           ]),
       body: Container(
         child: Column(

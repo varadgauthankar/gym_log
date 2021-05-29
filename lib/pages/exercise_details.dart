@@ -6,14 +6,17 @@ import 'package:provider/provider.dart';
 import 'package:workout_tracker/db/moor_db.dart';
 import 'package:workout_tracker/models/data_model.dart';
 import 'package:workout_tracker/utils/colors.dart';
+import 'package:workout_tracker/utils/enums.dart';
 import 'package:workout_tracker/utils/textStyles.dart';
 import 'package:workout_tracker/utils/helpers.dart';
+import 'package:workout_tracker/utils/units.dart';
 
 class ExerciseDetail extends StatefulWidget {
   ExerciseDetail({this.exercise, this.isEdit, this.date});
   final Exercise exercise;
   final bool isEdit;
   final DateTime date;
+
   @override
   _ExerciseDetailState createState() => _ExerciseDetailState();
 }
@@ -29,19 +32,33 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
   final formKey = GlobalKey<FormState>();
   final formKey1 = GlobalKey<FormState>();
 
-  //Store the Data of the Sets
+  //temporarily Store the Data of the Sets
   List<Data> setsData = [];
+  // Weight weight = Weight(kg: 0, lbs: 0)
 
   //Add Set Data to the SetsData list
+
+  //TODO: remove the decimal places
   void addSet() {
     if (formKey1.currentState.validate()) {
       Data data = Data(
         reps: int.parse(repsController.text),
-        weight: double.parse(weightController.text),
+        weight: Weight(
+          kg: Provider.of<UnitsNotifier>(context, listen: false).weightUnit ==
+                  WeightUnit.kg
+              ? roundDouble(double.parse(weightController.text), 1)
+              : roundDouble(double.parse(weightController.text) / 2.2046, 0),
+          lbs: Provider.of<UnitsNotifier>(context, listen: false).weightUnit ==
+                  WeightUnit.kg
+              ? roundDouble(double.parse(weightController.text) * 2.2046, 0)
+              : roundDouble(double.parse(weightController.text), 1),
+        ),
       );
 
       setState(() {
         setsData.add(data);
+        print(data.weight.kg);
+        print(data.weight.lbs);
       });
       repsController.clear();
       weightController.clear();
@@ -53,7 +70,16 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
     if (formKey1.currentState.validate()) {
       Data data = Data(
         reps: int.parse(repsController.text),
-        weight: double.parse(weightController.text),
+        weight: Weight(
+          kg: Provider.of<UnitsNotifier>(context, listen: false).weightUnit ==
+                  WeightUnit.kg
+              ? roundDouble(double.parse(weightController.text), 1)
+              : roundDouble(double.parse(weightController.text) / 2.2046, 0),
+          lbs: Provider.of<UnitsNotifier>(context, listen: false).weightUnit ==
+                  WeightUnit.kg
+              ? roundDouble(double.parse(weightController.text) * 2.2046, 0)
+              : roundDouble(double.parse(weightController.text), 1),
+        ),
       );
 
       setState(() {
@@ -80,10 +106,18 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
 
     List dataDecoded = json.decode(widget.exercise.data);
 
+    // print('CRAZY DEBUG HERE');
+
+    print(dataDecoded[0]['weight']['kg']);
+
     for (var i = 0; i < dataDecoded.length; i++) {
+      var exData = dataDecoded[i];
       Data data = Data(
-        reps: dataDecoded[i]['reps'],
-        weight: dataDecoded[i]['weight'],
+        reps: exData['reps'],
+        weight: Weight(
+          kg: exData['weight']['kg'],
+          lbs: exData['weight']['lbs'],
+        ),
       );
 
       setsData.add(data);
@@ -352,7 +386,11 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
     FocusNode weight = FocusNode();
     FocusNode reps = FocusNode();
     if (isEdit) {
-      weightController.text = setData[index].weight.toString();
+      weightController.text =
+          Provider.of<UnitsNotifier>(context, listen: false).weightUnit ==
+                  WeightUnit.lbs
+              ? setData[index].weight.lbs.toString()
+              : setData[index].weight.kg.toString();
       repsController.text = setData[index].reps.toString();
     }
     showDialog(
@@ -387,7 +425,11 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: "Weight",
-                    suffix: Text("Kg"),
+                    suffix: Text(
+                        Provider.of<UnitsNotifier>(context).weightUnit ==
+                                WeightUnit.kg
+                            ? "Kg"
+                            : "Lbs"),
                   ),
                   validator: (value) {
                     if (value.isEmpty)
@@ -482,15 +524,29 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
                         : SetListCount.light,
                   ),
                   Text(
-                    "${setsData[i].weight} ",
+                    Provider.of<UnitsNotifier>(context).weightUnit ==
+                            WeightUnit.kg
+                        ? setsData[i].weight.kg.toString()
+                        : setsData[i].weight.lbs.toString(),
                     style: isThemeDark(context)
                         ? SetListValue.dark
                         : SetListValue.light,
                   ),
-                  Text("Kg for ",
-                      style: isThemeDark(context)
-                          ? SetListText.dark
-                          : SetListText.light),
+                  Text(
+                    Provider.of<UnitsNotifier>(context).weightUnit ==
+                            WeightUnit.kg
+                        ? " Kg"
+                        : " Lbs",
+                    style: isThemeDark(context)
+                        ? SetListText.dark
+                        : SetListText.light,
+                  ),
+                  Text(
+                    " for ",
+                    style: isThemeDark(context)
+                        ? SetListText.dark
+                        : SetListText.light,
+                  ),
                   Text(
                     "${setsData[i].reps} ",
                     style: isThemeDark(context)
