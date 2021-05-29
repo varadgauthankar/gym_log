@@ -287,3 +287,10 @@ class SettingsSubStyle {
       // fontWeight: FontWeight.w800,
       );
 }
+
+class DeleteDataButton {
+  static const light = TextStyle(
+    color: MyColors.errorColor,
+    fontWeight: FontWeight.w900,
+  );
+}
