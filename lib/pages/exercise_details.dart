@@ -37,8 +37,6 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
   // Weight weight = Weight(kg: 0, lbs: 0)
 
   //Add Set Data to the SetsData list
-
-  //TODO: remove the decimal places
   void addSet() {
     if (formKey1.currentState.validate()) {
       Data data = Data(
@@ -57,8 +55,6 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
 
       setState(() {
         setsData.add(data);
-        print(data.weight.kg);
-        print(data.weight.lbs);
       });
       repsController.clear();
       weightController.clear();
@@ -103,13 +99,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
   void setAllTheInputs() {
     nameController.text = widget.exercise.name;
     noteController.text = widget.exercise.note;
-
     List dataDecoded = json.decode(widget.exercise.data);
-
-    // print('CRAZY DEBUG HERE');
-
-    print(dataDecoded[0]['weight']['kg']);
-
     for (var i = 0; i < dataDecoded.length; i++) {
       var exData = dataDecoded[i];
       Data data = Data(
@@ -119,14 +109,8 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
           lbs: exData['weight']['lbs'],
         ),
       );
-
       setsData.add(data);
     }
-  }
-
-  void snackBar(BuildContext context, {String content}) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(content)));
   }
 
   @override
@@ -139,110 +123,132 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor:
-          isThemeDark(context) ? MyColors.darkGrey : MyColors.white,
-      appBar: AppBar(
-        // backgroundColor: MyColors.accentColor,
-        elevation: 3,
-        foregroundColor: MyColors.white,
-        iconTheme: IconThemeData(color: MyColors.white),
-        title: Hero(
-          tag: 'appBarTitle',
-          child: Material(
-            color: Colors.transparent,
-            child: Text(
-              "Edit Exercise",
-              style: AppBarTitleStyle.dark,
-            ),
-          ),
-        ),
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios, color: Colors.black),
-            onPressed: () => Navigator.pop(context)),
-      ),
-      body: Form(
-        key: formKey,
-        child: ListView(
-          children: [
-            Container(
-              padding: EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Exercise Name Text Field
-                  TextFormField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Exercise name",
-                      hintText: "Exercise name",
-                    ),
-                    autofocus: widget.isEdit ? false : true,
-                    validator: (value) {
-                      if (value.isEmpty)
-                        return 'Please enter the exercise name';
-                      else
-                        return null;
-                    },
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12.0),
-                    child: Text(
-                      "Sets",
-                      style: isThemeDark(context)
-                          ? CardSubTitleStyle.dark
-                          : CardSubTitleStyle.light,
-                    ),
-                  ),
-
-                  // build Sets list with their data
-                  buildSetList(setsData),
-
-                  // Button to add set
-                  TextButton(
-                    child: Text(
-                      "+ Add Set",
-                      style: isThemeDark(context)
-                          ? AddSetButtonStyle.dark
-                          : AddSetButtonStyle.light,
-                    ),
-                    onPressed: showSetsInputDialog,
-                  ),
-
-                  // note textfiled
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextField(
-                          controller: noteController,
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: "Note",
-                            hintText: "Note",
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
+    return WillPopScope(
+      child: Scaffold(
+        backgroundColor:
+            isThemeDark(context) ? MyColors.darkGrey : MyColors.white,
+        appBar: AppBar(
+          elevation: 3,
+          foregroundColor: MyColors.white,
+          iconTheme: IconThemeData(color: MyColors.white),
+          title: Hero(
+            tag: 'appBarTitle',
+            child: Material(
+              color: Colors.transparent,
+              child: Text(
+                "Edit Exercise",
+                style: AppBarTitleStyle.dark,
               ),
             ),
-          ],
+          ),
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+              onPressed: () => Navigator.pop(context)),
         ),
-      ),
+        body: Form(
+          key: formKey,
+          child: ListView(
+            children: [
+              Container(
+                padding: EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Exercise Name Text Field
+                    TextFormField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Exercise name",
+                        hintText: "Exercise name",
+                      ),
+                      autofocus: widget.isEdit ? false : true,
+                      validator: (value) {
+                        if (value.isEmpty)
+                          return 'Please enter the exercise name';
+                        else
+                          return null;
+                      },
+                    ),
 
-      // Floating action Button
-      //chnage fab according to the screen user on, edit or create.
-      floatingActionButton:
-          widget.isEdit ? editExerciseButton() : createNewExerciseButton(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12.0),
+                      child: Text(
+                        "Sets",
+                        style: isThemeDark(context)
+                            ? CardSubTitleStyle.dark
+                            : CardSubTitleStyle.light,
+                      ),
+                    ),
+
+                    // build Sets list with their data
+                    buildSetList(setsData),
+
+                    // Button to add set
+                    TextButton(
+                      child: Text(
+                        "+ Add Set",
+                        style: isThemeDark(context)
+                            ? AddSetButtonStyle.dark
+                            : AddSetButtonStyle.light,
+                      ),
+                      onPressed: showSetsInputDialog,
+                    ),
+
+                    // note textfiled
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextField(
+                            controller: noteController,
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: "Note",
+                              hintText: "Note",
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Floating action Button
+        //chnage fab according to the screen user on, edit or create.
+        floatingActionButton:
+            widget.isEdit ? editExerciseButton() : createNewExerciseButton(),
+      ),
+      onWillPop: onWillPop,
     );
+  }
+
+  Future<bool> onWillPop() async {
+    // Navigator.pop(context);
+    if (formKey.currentState.validate()) {
+      if (setsData.isNotEmpty) {
+        String setsDataString = json.encode(setsData);
+        final exercicse = widget.exercise.copyWith(
+          name: nameController.text,
+          sets: setsData.length,
+          data: setsDataString,
+          note: noteController.text,
+        );
+
+        final database = Provider.of<AppDatabase>(context, listen: false);
+        database.updateExercise(exercicse);
+        Navigator.pop(context);
+      } else
+        snackBar(context, content: 'Please enter atleast one set!');
+    }
   }
 
 //Confirm Delete of exercise
