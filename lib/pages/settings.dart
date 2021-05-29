@@ -1,12 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:workout_tracker/db/moor_db.dart';
 import 'package:workout_tracker/utils/colors.dart';
 import 'package:workout_tracker/utils/enums.dart';
 import 'package:workout_tracker/utils/helpers.dart';
 import 'package:workout_tracker/utils/textStyles.dart';
 import 'package:workout_tracker/utils/theme.dart';
 import 'package:workout_tracker/utils/units.dart';
+import 'package:workout_tracker/widgets/settings_card.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -71,11 +73,6 @@ class _SettingsPageState extends State<SettingsPage> {
         .toggleWeightUnit(weightUnit);
   }
 
-  // get the color of the overlay widget, just some material rules.
-  Color getOverLayColor(BuildContext context, Color color) {
-    return Color.alphaBlend(ElevationOverlay.overlayColor(context, 1), color);
-  }
-
   //Sets Chips to their respective value
   void setChipValues() {
     appTheme = Provider.of<ThemeNotifier>(context, listen: false).appTheme;
@@ -102,7 +99,7 @@ class _SettingsPageState extends State<SettingsPage> {
           child: Material(
             color: Colors.transparent,
             child: Text(
-              "Settings",
+              'Settings',
               style: AppBarTitleStyle.dark,
             ),
           ),
@@ -114,72 +111,86 @@ class _SettingsPageState extends State<SettingsPage> {
       body: ListView(
         padding: EdgeInsets.all(6.0),
         children: [
-          Container(
-            margin: EdgeInsets.all(6.0),
-            child: Material(
-              elevation: 3,
-              color: isThemeDark(context)
-                  ? getOverLayColor(context, MyColors.darkGrey)
-                  : Colors.white,
-              borderRadius: BorderRadius.circular(8.0),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(8.0),
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Apperance',
-                          style: isThemeDark(context)
-                              ? SettingsHeadingStyle.dark
-                              : SettingsHeadingStyle.light,
-                        ),
-                        SizedBox(height: 12.0),
-                        Text('Dark Mode'),
-                        Wrap(
-                          children: buildDarkModeChoices(),
-                        ),
-                      ]),
-                ),
-              ),
+          SettingsCard(
+            title: 'Appearance',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Dark Mode'),
+                Wrap(children: buildDarkModeChoices()),
+              ],
             ),
           ),
-          Container(
-            margin: EdgeInsets.all(6.0),
-            child: Material(
-              elevation: 3,
-              color: isThemeDark(context)
-                  ? getOverLayColor(context, MyColors.darkGrey)
-                  : Colors.white,
-              borderRadius: BorderRadius.circular(8.0),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(8.0),
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Units',
-                          style: isThemeDark(context)
-                              ? SettingsHeadingStyle.dark
-                              : SettingsHeadingStyle.light,
-                        ),
-                        SizedBox(height: 12.0),
-                        Text('Weight'),
-                        Wrap(
-                          children: buildWeightChoices(),
-                        ),
-                      ]),
-                ),
-              ),
+          SettingsCard(
+            title: 'Units',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Dark Mode'),
+                Wrap(children: buildWeightChoices()),
+              ],
+            ),
+          ),
+          SettingsCard(
+            title: 'Data',
+            child: Column(
+              children: [
+                TextButton(
+                  child: Text(
+                    'DELETE ALL DATA',
+                    style: DeleteDataButton.light,
+                  ),
+                  style: TextButton.styleFrom(
+                      backgroundColor: MyColors.black.withOpacity(0.1)),
+                  onPressed: deleteAllDataDialog,
+                )
+              ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  void deleteAllDataDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            title: Text('Warning!'),
+            content: Text('Really delete all data? This cannot be undone.'),
+            actions: [
+              TextButton(
+                child: Text(
+                  'CANCEL',
+                  style: isThemeDark(context)
+                      ? DialogActionNegative.dark
+                      : DialogActionNegative.light,
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
+              TextButton(
+                child: Text(
+                  'DELETE',
+                  style: isThemeDark(context)
+                      ? DialogActionPositive.dark
+                      : DialogActionPositive.light,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Provider.of<AppDatabase>(context, listen: false)
+                      .deleteAllData()
+                      .then(
+                        (value) => snackBar(context,
+                            content: 'Deleted $value Exercise(s)'),
+                      );
+                },
+              )
+            ],
+          );
+        });
   }
 }
