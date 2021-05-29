@@ -6,6 +6,7 @@ import 'package:workout_tracker/pages/settings.dart';
 import 'package:workout_tracker/utils/colors.dart';
 import 'package:workout_tracker/utils/date_picker.dart';
 import 'package:workout_tracker/utils/textStyles.dart';
+import 'package:workout_tracker/widgets/empty_page.dart';
 import 'package:workout_tracker/widgets/exercise_card.dart';
 import 'package:intl/intl.dart';
 import 'package:workout_tracker/utils/helpers.dart';
@@ -128,27 +129,7 @@ class _ExerciseListState extends State<ExerciseList> {
               },
             );
           } else
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/no_data.png',
-                    height: 150.0,
-                    width: 150.0,
-                  ),
-                  SizedBox(height: 12),
-                  Text('No exercises yet!',
-                      style: isThemeDark(context)
-                          ? NoDataHeading.dark
-                          : NoDataHeading.light),
-                  Text('click  +  to add the exercise',
-                      style: isThemeDark(context)
-                          ? NoDataSubtitle.dark
-                          : NoDataSubtitle.light),
-                ],
-              ),
-            );
+            return EmptyPage();
         } else {
           return Center(child: CircularProgressIndicator());
         }
