@@ -28,6 +28,10 @@ class AppDatabase extends _$AppDatabase {
   Future deleteExercise(Exercise exercise) =>
       delete(exercises).delete(exercise);
 
+  Future<int> deleteAllData() {
+    return delete(exercises).go();
+  }
+
 //wathc the exercises with the date passed
   Stream<List<Exercise>> watchExerciseWithDate({DateTime date}) {
     return (select(exercises)
