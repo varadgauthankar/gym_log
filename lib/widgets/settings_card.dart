@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:workout_tracker/utils/colors.dart';
-import 'package:workout_tracker/utils/helpers.dart';
-import 'package:workout_tracker/utils/textStyles.dart';
+import 'package:gym_log/utils/colors.dart';
+import 'package:gym_log/utils/helpers.dart';
+import 'package:gym_log/utils/textStyles.dart';
 
 class SettingsCard extends StatelessWidget {
   final Widget child;

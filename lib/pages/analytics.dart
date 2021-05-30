@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:workout_tracker/utils/colors.dart';
-import 'package:workout_tracker/utils/textStyles.dart';
+import 'package:gym_log/utils/colors.dart';
+import 'package:gym_log/utils/textStyles.dart';
 
 class Analytics extends StatefulWidget {
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workout_tracker/utils/enums.dart';
+import 'package:gym_log/utils/enums.dart';
 
 class UnitsNotifier extends ChangeNotifier {
   final String weightUnitKey = "weightUnit";

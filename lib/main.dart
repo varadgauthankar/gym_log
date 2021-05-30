@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:workout_tracker/db/moor_db.dart';
-import 'package:workout_tracker/pages/exercise_list.dart';
-import 'package:workout_tracker/utils/theme.dart';
-import 'package:workout_tracker/utils/units.dart';
+import 'package:gym_log/db/moor_db.dart';
+import 'package:gym_log/pages/exercise_list.dart';
+import 'package:gym_log/utils/theme.dart';
+import 'package:gym_log/utils/units.dart';
 
 void main() async {
   runApp(MyApp());

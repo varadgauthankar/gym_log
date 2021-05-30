@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:workout_tracker/db/moor_db.dart';
-import 'package:workout_tracker/pages/exercise_details.dart';
-import 'package:workout_tracker/pages/settings.dart';
-import 'package:workout_tracker/utils/colors.dart';
-import 'package:workout_tracker/utils/date_picker.dart';
-import 'package:workout_tracker/utils/textStyles.dart';
-import 'package:workout_tracker/widgets/empty_page.dart';
-import 'package:workout_tracker/widgets/exercise_card.dart';
+import 'package:gym_log/db/moor_db.dart';
+import 'package:gym_log/pages/exercise_details.dart';
+import 'package:gym_log/pages/settings.dart';
+import 'package:gym_log/utils/colors.dart';
+import 'package:gym_log/utils/date_picker.dart';
+import 'package:gym_log/utils/textStyles.dart';
+import 'package:gym_log/widgets/empty_page.dart';
+import 'package:gym_log/widgets/exercise_card.dart';
 import 'package:intl/intl.dart';
-import 'package:workout_tracker/utils/helpers.dart';
+import 'package:gym_log/utils/helpers.dart';
 
 class ExerciseList extends StatefulWidget {
   @override

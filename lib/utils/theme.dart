@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workout_tracker/utils/colors.dart';
-import 'package:workout_tracker/utils/enums.dart';
+import 'package:gym_log/utils/colors.dart';
+import 'package:gym_log/utils/enums.dart';
 
 ThemeData light = ThemeData(
   brightness: Brightness.light,

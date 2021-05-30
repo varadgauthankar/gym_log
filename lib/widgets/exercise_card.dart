@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:workout_tracker/db/moor_db.dart';
-import 'package:workout_tracker/utils/colors.dart';
-import 'package:workout_tracker/utils/enums.dart';
-import 'package:workout_tracker/utils/units.dart';
-import 'package:workout_tracker/utils/textStyles.dart';
-import 'package:workout_tracker/utils/helpers.dart';
+import 'package:gym_log/db/moor_db.dart';
+import 'package:gym_log/utils/colors.dart';
+import 'package:gym_log/utils/enums.dart';
+import 'package:gym_log/utils/units.dart';
+import 'package:gym_log/utils/textStyles.dart';
+import 'package:gym_log/utils/helpers.dart';
 
 class ExerciseCard extends StatelessWidget {
   final Exercise exercise;

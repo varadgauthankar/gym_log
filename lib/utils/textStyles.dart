@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:workout_tracker/utils/colors.dart';
+import 'package:gym_log/utils/colors.dart';
 
 class AppBarTitleStyle {
   static const light = TextStyle(
