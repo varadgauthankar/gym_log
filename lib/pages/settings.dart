@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_tracker/db/moor_db.dart';
 import 'package:workout_tracker/utils/colors.dart';
@@ -26,7 +27,8 @@ class _SettingsPageState extends State<SettingsPage> {
       choices.add(Container(
         padding: const EdgeInsets.all(2.0),
         child: ChoiceChip(
-          label: Text(describeEnum(item)),
+          label: Text(toBeginningOfSentenceCase(
+              describeEnum(item))), //Enum to string, First letter capital
           selected: appTheme == item,
           onSelected: (selected) {
             setState(() {
@@ -48,7 +50,8 @@ class _SettingsPageState extends State<SettingsPage> {
       choices.add(Container(
         padding: const EdgeInsets.all(2.0),
         child: ChoiceChip(
-          label: Text(describeEnum(item)), //converts enum to string.
+          label: Text(toBeginningOfSentenceCase(
+              describeEnum(item))), //Enum to string, First letter capital
           selected: weightUnit == item,
           onSelected: (selected) {
             setState(() {
@@ -126,7 +129,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Dark Mode'),
+                Text('Weight'),
                 Wrap(children: buildWeightChoices()),
               ],
             ),
