@@ -113,6 +113,44 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
     }
   }
 
+//save exercise
+  void saveExercise(bool isEdit) {
+    if (formKey.currentState.validate()) {
+      //check if atleast one set is present
+      if (setsData.isNotEmpty) {
+        final setsDataString = jsonEncode(setsData);
+
+        final exercise = isEdit
+            ? widget.exercise.copyWith(
+                name: nameController.text,
+                sets: setsData.length,
+                data: setsDataString,
+                note: noteController.text,
+              )
+            : Exercise(
+                id: null,
+                name: nameController.text,
+                sets: setsData.length,
+                date: widget.date,
+                note: noteController.text,
+                data: setsDataString,
+              );
+
+        //Create instance of database
+        final database = Provider.of<AppDatabase>(context, listen: false);
+
+        //update Exercise Data to Database
+        isEdit
+            ? database.updateExercise(exercise)
+            : database.insertExercise(exercise);
+        Navigator.pop(context);
+      } else {
+        //show snackbar if set is empty
+        snackBar(context, content: 'Please enter atleast one set!');
+      }
+    }
+  }
+
   @override
   void initState() {
     if (widget.isEdit) {
@@ -136,7 +174,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
             child: Material(
               color: Colors.transparent,
               child: Text(
-                "Edit Exercise",
+                widget.isEdit ? "Edit Exercise" : "Create Exercise",
                 style: AppBarTitleStyle.dark,
               ),
             ),
@@ -164,7 +202,6 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
                         labelText: "Exercise name",
                         hintText: "Exercise name",
                       ),
-                      autofocus: widget.isEdit ? false : true,
                       validator: (value) {
                         if (value.isEmpty)
                           return 'Please enter the exercise name';
@@ -234,23 +271,11 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
   }
 
   Future<bool> onWillPop() async {
-    // Navigator.pop(context);
-    if (formKey.currentState.validate()) {
-      if (setsData.isNotEmpty) {
-        String setsDataString = json.encode(setsData);
-        final exercicse = widget.exercise.copyWith(
-          name: nameController.text,
-          sets: setsData.length,
-          data: setsDataString,
-          note: noteController.text,
-        );
-
-        final database = Provider.of<AppDatabase>(context, listen: false);
-        database.updateExercise(exercicse);
-        Navigator.pop(context);
-      } else
-        snackBar(context, content: 'Please enter atleast one set!');
-    }
+    if (nameController.text.isNotEmpty || setsData.isNotEmpty) {
+      print('in here hi');
+      saveExercise(widget.isEdit);
+    } else
+      Navigator.pop(context);
     return null;
   }
 
@@ -313,25 +338,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
           label: 'Save',
           labelBackgroundColor:
               isThemeDark(context) ? MyColors.darkGrey : MyColors.white,
-          onTap: () {
-            if (formKey.currentState.validate()) {
-              if (setsData.isNotEmpty) {
-                String setsDataString = json.encode(setsData);
-                final exercicse = widget.exercise.copyWith(
-                  name: nameController.text,
-                  sets: setsData.length,
-                  data: setsDataString,
-                  note: noteController.text,
-                );
-
-                final database =
-                    Provider.of<AppDatabase>(context, listen: false);
-                database.updateExercise(exercicse);
-                Navigator.pop(context);
-              } else
-                snackBar(context, content: 'Please enter atleast one set!');
-            }
-          },
+          onTap: () => saveExercise(widget.isEdit),
         ),
         SpeedDialChild(
           child: Icon(Icons.delete_rounded),
@@ -358,34 +365,7 @@ class _ExerciseDetailState extends State<ExerciseDetail> {
         Icons.done_rounded,
         color: MyColors.black,
       ),
-      onPressed: () {
-        //Validate the textfields
-        if (formKey.currentState.validate()) {
-          //check if atleast one set is present
-          if (setsData.isNotEmpty) {
-            final setsDataString = jsonEncode(setsData);
-            print(widget.date);
-            final exercise = Exercise(
-              id: null,
-              name: nameController.text,
-              sets: setsData.length,
-              date: widget.date,
-              note: noteController.text,
-              data: setsDataString,
-            );
-
-            //Create instance of database
-            final database = Provider.of<AppDatabase>(context, listen: false);
-
-            //Insert Exercise Data to Database
-            database.insertExercise(exercise);
-            Navigator.pop(context);
-          } else {
-            //show snackbar if set is empty
-            snackBar(context, content: 'Please enter atleast one set!');
-          }
-        }
-      },
+      onPressed: () => saveExercise(widget.isEdit),
     );
   }
 

@@ -32,7 +32,6 @@ class ExerciseCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
         child: InkWell(
           borderRadius: BorderRadius.circular(8.0),
-          splashColor: MyColors.accentVarientColor,
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(12.0),
